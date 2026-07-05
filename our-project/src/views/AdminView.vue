@@ -40,6 +40,7 @@
           <details class="panel" open>
             <summary>⚙️ Koneksi GitHub (untuk Publish)</summary>
             <div class="panel-body">
+            
               <div class="field-row">
                 <button class="btn-secondary" @click="saveGithubConfig">Simpan Pengaturan</button>
                 <button class="btn-secondary" @click="handleTestConnection" :disabled="testing">

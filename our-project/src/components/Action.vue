@@ -1,15 +1,22 @@
 <template>
-  <div class="aida-action-section">
-    <i class="fas fa-bullhorn" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
-    <h3>{{ content.action.title }}</h3>
-    <p>
-      {{ content.action.descriptionLine1 }}<br>
-      <i class="fas fa-mouse-pointer"></i> {{ content.action.descriptionLine2 }}
-    </p>
-    <button @click="handleAction" class="btn-action-large">
-      <i class="fas fa-hand-peace"></i> {{ content.action.buttonText }}
-    </button>
-  </div>
+  <section class="action-section">
+    <div class="action-inner">
+      <div class="action-icon">
+        <i class="fas fa-bullhorn"></i>
+      </div>
+
+      <h3 class="action-title">{{ content.action.title }}</h3>
+
+      <p class="action-desc">
+        {{ content.action.descriptionLine1 }}<br>
+        <i class="fas fa-mouse-pointer"></i> {{ content.action.descriptionLine2 }}
+      </p>
+
+      <button @click="handleAction" class="btn-action-large">
+        <i class="fas fa-hand-peace"></i> {{ content.action.buttonText }}
+      </button>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -35,30 +42,67 @@ export default {
 </script>
 
 <style scoped>
-.aida-action-section {
+.action-section {
+  padding: 0 var(--section-padding-x) 50px;
+}
+
+.action-inner {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
   border-radius: var(--radius-card);
-  margin: 0 8% 50px 8%;
-  padding: 40px 30px;
+  padding: 50px 30px;
   text-align: center;
-  color: white;
-  box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+  color: var(--button-text-color);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.action-inner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 26px 45px rgba(0, 0, 0, 0.14);
+}
+
+.action-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 22px;
+  font-size: 1.8rem;
   transition: transform 0.3s ease;
 }
 
-.aida-action-section:hover {
-  transform: translateY(-5px);
+.action-inner:hover .action-icon {
+  transform: scale(1.08);
 }
 
-.aida-action-section h3 {
+.action-title {
   font-size: var(--subtitle-size);
-  margin-bottom: 15px;
+  font-weight: var(--subtitle-weight);
+  line-height: 1.35;
+  margin-bottom: 16px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.aida-action-section p {
+.action-desc {
   font-size: var(--paragraph-size);
-  margin-bottom: 25px;
+  font-weight: var(--paragraph-weight);
+  line-height: var(--line-height-base);
+  margin-bottom: 30px;
   opacity: 0.95;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.action-desc i {
+  margin-right: 4px;
 }
 
 .btn-action-large {
@@ -66,27 +110,36 @@ export default {
   color: var(--primary-color);
   border: none;
   padding: 14px 42px;
-  border-radius: 60px;
-  font-weight: bold;
+  border-radius: var(--radius-button);
+  font-weight: var(--button-text-weight);
   font-size: var(--button-text-size);
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
 .btn-action-large:hover {
   background: var(--cta-accent-hover);
   transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
 }
 
 @media (max-width: 768px) {
-  .aida-action-section {
-    margin: 0 5% 40px 5%;
-    padding: 30px 20px;
+  .action-section {
+    padding: 0 5% 40px;
   }
 
-  .aida-action-section h3 {
+  .action-inner {
+    padding: 36px 22px;
+  }
+
+  .action-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
+  }
+
+  .action-title {
     font-size: 1.4rem;
   }
 
