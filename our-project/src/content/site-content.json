@@ -1,12 +1,12 @@
 {
   "images": {
     "logo": "/uploads/logo.png",
-    "hero": "/uploads/hero-1783267795922.jpg"
+    "hero": "/uploads/hero-1783269695845.png"
   },
   "colors": {
     "primary": "#1e6f5c",
     "primaryHover": "#0f5444",
-    "secondary": "#3ca17es",
+    "secondary": "#3ca17e",
     "accent": "#e2d8d8",
     "background": "#20A04F",
     "textMain": "#ffffff",
@@ -171,7 +171,7 @@
     ]
   },
   "action": {
-    "title": "🚀 Mulai sekarang, jangan biarkan barang bekasmu berdebu di sudut kamar.",
+    "title": "Mulai sekarang, jangan biarkan barang bekasmu berdebu di sudut kamar.",
     "descriptionLine1": "Upload produkmu di Second Chance Market dan temukan pembeli yang tepat.",
     "descriptionLine2": "Klik, jual, dan wujudkan peluang baru dari barang lama.",
     "buttonText": "Jual Sekarang & Raih Peluang Baru"
