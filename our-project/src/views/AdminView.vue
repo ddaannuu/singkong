@@ -417,13 +417,9 @@ export default {
         logo: { uploading: false, result: null },
         hero: { uploading: false, result: null }
       },
-      pendingImages: {},
       // Gambar yang sudah dipilih & di-resize secara lokal tapi BELUM
       // di-upload ke GitHub (menunggu tombol "Publish ke GitHub").
-      pendingImages: {
-        logo: null,
-        hero: null
-      },
+      pendingImages: {},
 
       colorFields: [
         { key: 'primary', label: 'Warna Utama (Primary)' },
@@ -557,7 +553,16 @@ export default {
         //    berisi data URL raksasa, melainkan path bersih.
         const pendingKeys = Object.keys(this.pendingImages)
         for (const key of pendingKeys) {
-          const { base64, mimeType, extension } = this.pendingImages[key]
+          const pending = this.pendingImages[key]
+
+          // Pengaman: kalau entri ini kosong/tidak valid, lewati saja
+          // daripada membuat proses publish gagal total.
+          if (!pending || !pending.base64) {
+            delete this.pendingImages[key]
+            continue
+          }
+
+          const { base64, mimeType, extension } = pending
           const filename = `${key}-${Date.now()}.${extension}`
           const targetPath = `public/uploads/${filename}`
 

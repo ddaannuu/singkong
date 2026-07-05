@@ -179,7 +179,6 @@ body {
     justify-content: space-between;
     padding: 40px var(--section-padding-x) 60px;
     gap: 30px;
-    background: var(--bg-gradient);
 }
 
 .hero-left {
