@@ -1,0 +1,113 @@
+{
+  "images": {
+    "logo": "/uploads/logo.png",
+    "hero": "/uploads/hero.jpg"
+  },
+  "colors": {
+    "primary": "#1e6f5c",
+    "primaryHover": "#0f5444",
+    "secondary": "#3ca17e",
+    "accent": "#e2d8d8",
+    "background": "hsla(143.04,66.14%,37.06%,1)",
+    "textMain": "#ffffff",
+    "textMuted": "#ffffff",
+    "textMains": "#164c3b",
+    "textMuteds": "#3e6b5d",
+    "buttonText": "#ffffff",
+    "navbarBg": "rgba(255, 255, 255, 0.95)",
+    "navbarText": "#2c5e4c",
+    "footerBg": "#154c3d",
+    "footerText": "#cfe8e0",
+    "cardBg": "#f9fffc",
+    "borderColor": "#cbe5dc",
+    "iconColor": "#2c7a5e",
+    "ctaAccent": "#ffd966",
+    "ctaAccentHover": "#ffcd38"
+  },
+  "typography": {
+    "fontFamily": "'Poppins', 'Segoe UI', sans-serif",
+    "titleSize": "3.2rem",
+    "titleWeight": "700",
+    "subtitleSize": "2.2rem",
+    "subtitleWeight": "600",
+    "paragraphSize": "1.2rem",
+    "paragraphWeight": "400",
+    "captionSize": "0.9rem",
+    "captionWeight": "500",
+    "buttonTextSize": "1rem",
+    "buttonTextWeight": "700",
+    "lineHeight": "1.6"
+  },
+  "layout": {
+    "borderRadiusButton": "50px",
+    "borderRadiusCard": "32px",
+    "borderRadiusSection": "60px",
+    "shadowSoft": "0 4px 20px rgba(0, 0, 0, 0.05)",
+    "shadowCard": "0 10px 20px rgba(0,0,0,0.03)",
+    "sectionPaddingX": "8%",
+    "sectionPaddingY": "60px",
+    "containerMaxWidth": "1200px",
+    "gridGap": "35px"
+  },
+  "navbar": {
+    "logoText": "Second Chance Market",
+    "menu": [
+      { "label": "Beranda", "href": "#" },
+      { "label": "Fitur", "href": "#fitur" },
+      { "label": "Panduan", "href": "#cara-kerja" }
+    ],
+    "ctaText": "Masuk Marketplace"
+  },
+  "hero": {
+    "titleBefore": "Barang bekasmu bukan sekadar sisa, tapi",
+    "titleHighlight": "peluang baru!",
+    "subtitleHighlight": "Bayangkan betapa mudahnya menjual atau membeli barang bekas yang masih layak pakai, khususnya bagi mahasiswa rantau.",
+    "subtitle": "Dengan Second Chance Market, kamu bisa menemukan meja belajar, kasur, hingga peralatan dapur dengan harga ramah kantong, langsung dari sesama mahasiswa.",
+    "primaryBtnText": "Mulai Jelajahi",
+    "outlineBtnText": "Lihat Demo"
+  },
+  "features": {
+    "sectionTitle": "Fitur Andalan untuk Warga",
+    "introBold": "Tak perlu repot pindahan atau bingung menjual barang saat pulang kampung.",
+    "introText": "Fitur unggulan Titip Jual Saat Pulang dan sistem Pre-Order membuat proses jual-beli jadi lebih praktis, aman, dan sesuai kebutuhan mahasiswa. Hemat biaya, hemat waktu, sekaligus mendukung gaya hidup berkelanjutan.",
+    "introHighlight": "Titip Jual Saat Pulang",
+    "items": [
+      { "icon": "fas fa-box-open", "title": "Post Barang + Kategori", "text": "Upload foto, deskripsi, harga, dan pilih kategori (Elektronik, Furnitur, Buku, dll)." },
+      { "icon": "fas fa-comment-dots", "title": "Chat Penjual & Pembeli", "text": "Komunikasi langsung, nego harga, tanya kondisi barang secara realtime." },
+      { "icon": "fas fa-heart", "title": "Wishlist & Simpan Barang", "text": "Simpan barang incaran, akses kapan saja, dan bandingkan harga." },
+      { "icon": "fas fa-plane-departure", "title": "Titip Jual Saat Pulang", "text": "Jadwalkan penjualan barang sebelum mudik, buyer bisa pre-order!" },
+      { "icon": "fas fa-cubes", "title": "Bundling \"Paket Anak Kos\"", "text": "Beli kasur + meja + lampu jadi satu paket, lebih murah & praktis." },
+      { "icon": "fas fa-chart-line", "title": "Simulasi Marketplace", "text": "Platform pembelajaran interaktif untuk memahami alur jual beli digital." }
+    ]
+  },
+  "howItWorks": {
+    "sectionTitle": "Cara Kerja Second Chance Market",
+    "steps": [
+      { "title": "Posting Barang", "text": "Upload barang bekasmu lengkap dengan harga dan kategori." },
+      { "title": "Negosiasi & Chat", "text": "Pembeli menghubungi via chat internal untuk tawar menawar." },
+      { "title": "Transaksi Aman", "text": "Kesepakatan harga, barang diambil/dikirim (simulasi)." },
+      { "title": "Beri Rating", "text": "Bangun reputasi sebagai penjual terpercaya di lingkungan kampus." }
+    ]
+  },
+  "testimoni": {
+    "sectionTitle": "Apa Kata Mereka?",
+    "ctaButtonText": "Coba Sekarang",
+    "items": [
+      { "id": 1, "name": "Dina", "major": "Informatika 2022", "text": "Aku bisa menjual lemari bekas sebelum pulang kampung. Fitur titip jual sangat membantu dan dalam dua hari barangku langsung laku." },
+      { "id": 2, "name": "Rizky", "major": "Sistem Informasi 2021", "text": "Second Chance Market membuatku lebih mudah menjual barang yang sudah tidak terpakai tanpa harus mencari pembeli sendiri." },
+      { "id": 3, "name": "Sarah", "major": "Teknik Industri 2023", "text": "Aku mendapatkan meja belajar dengan harga yang jauh lebih murah. Kondisinya masih bagus dan sesuai dengan deskripsi." },
+      { "id": 4, "name": "Andi", "major": "Teknik Informatika 2022", "text": "Fitur chat sangat memudahkan proses negosiasi. Semuanya terasa lebih praktis karena dilakukan dalam satu platform." },
+      { "id": 5, "name": "Nabila", "major": "Manajemen 2021", "text": "Platform ini membantu mahasiswa menghemat pengeluaran sekaligus mengurangi barang bekas yang tidak terpakai." }
+    ]
+  },
+  "action": {
+    "title": "🚀 Mulai sekarang, jangan biarkan barang bekasmu berdebu di sudut kamar.",
+    "descriptionLine1": "Upload produkmu di Second Chance Market dan temukan pembeli yang tepat.",
+    "descriptionLine2": "Klik, jual, dan wujudkan peluang baru dari barang lama.",
+    "buttonText": "Jual Sekarang & Raih Peluang Baru"
+  },
+  "footer": {
+    "line1": "Second Chance Market — Edukasi Marketplace untuk Mahasiswa Indonesia",
+    "line2": "🌱 Hijau, kolaboratif, dan hemat | © 2025 Simulasi Pembelajaran Informatika"
+  }
+}
