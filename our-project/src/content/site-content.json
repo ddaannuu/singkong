@@ -4,11 +4,11 @@
     "hero": "/uploads/hero.jpg"
   },
   "colors": {
-    "primary": "#1e6f5c",
+    "primary": "#3ca17e",
     "primaryHover": "#0f5444",
     "secondary": "#3ca17e",
     "accent": "#e2d8d8",
-    "background": "hsla(143.04,66.14%,37.06%,1)",
+    "background": "#3ca17e",
     "textMain": "#ffffff",
     "textMuted": "#ffffff",
     "textMains": "#164c3b",
@@ -52,9 +52,18 @@
   "navbar": {
     "logoText": "Second Chance Market",
     "menu": [
-      { "label": "Beranda", "href": "#" },
-      { "label": "Fitur", "href": "#fitur" },
-      { "label": "Panduan", "href": "#cara-kerja" }
+      {
+        "label": "Beranda",
+        "href": "#"
+      },
+      {
+        "label": "Fitur",
+        "href": "#fitur"
+      },
+      {
+        "label": "Panduan",
+        "href": "#cara-kerja"
+      }
     ],
     "ctaText": "Masuk Marketplace"
   },
@@ -72,32 +81,93 @@
     "introText": "Fitur unggulan Titip Jual Saat Pulang dan sistem Pre-Order membuat proses jual-beli jadi lebih praktis, aman, dan sesuai kebutuhan mahasiswa. Hemat biaya, hemat waktu, sekaligus mendukung gaya hidup berkelanjutan.",
     "introHighlight": "Titip Jual Saat Pulang",
     "items": [
-      { "icon": "fas fa-box-open", "title": "Post Barang + Kategori", "text": "Upload foto, deskripsi, harga, dan pilih kategori (Elektronik, Furnitur, Buku, dll)." },
-      { "icon": "fas fa-comment-dots", "title": "Chat Penjual & Pembeli", "text": "Komunikasi langsung, nego harga, tanya kondisi barang secara realtime." },
-      { "icon": "fas fa-heart", "title": "Wishlist & Simpan Barang", "text": "Simpan barang incaran, akses kapan saja, dan bandingkan harga." },
-      { "icon": "fas fa-plane-departure", "title": "Titip Jual Saat Pulang", "text": "Jadwalkan penjualan barang sebelum mudik, buyer bisa pre-order!" },
-      { "icon": "fas fa-cubes", "title": "Bundling \"Paket Anak Kos\"", "text": "Beli kasur + meja + lampu jadi satu paket, lebih murah & praktis." },
-      { "icon": "fas fa-chart-line", "title": "Simulasi Marketplace", "text": "Platform pembelajaran interaktif untuk memahami alur jual beli digital." }
+      {
+        "icon": "fas fa-box-open",
+        "title": "Post Barang + Kategori",
+        "text": "Upload foto, deskripsi, harga, dan pilih kategori (Elektronik, Furnitur, Buku, dll)."
+      },
+      {
+        "icon": "fas fa-comment-dots",
+        "title": "Chat Penjual & Pembeli",
+        "text": "Komunikasi langsung, nego harga, tanya kondisi barang secara realtime."
+      },
+      {
+        "icon": "fas fa-heart",
+        "title": "Wishlist & Simpan Barang",
+        "text": "Simpan barang incaran, akses kapan saja, dan bandingkan harga."
+      },
+      {
+        "icon": "fas fa-plane-departure",
+        "title": "Titip Jual Saat Pulang",
+        "text": "Jadwalkan penjualan barang sebelum mudik, buyer bisa pre-order!"
+      },
+      {
+        "icon": "fas fa-cubes",
+        "title": "Bundling \"Paket Anak Kos\"",
+        "text": "Beli kasur + meja + lampu jadi satu paket, lebih murah & praktis."
+      },
+      {
+        "icon": "fas fa-chart-line",
+        "title": "Simulasi Marketplace",
+        "text": "Platform pembelajaran interaktif untuk memahami alur jual beli digital."
+      }
     ]
   },
   "howItWorks": {
     "sectionTitle": "Cara Kerja Second Chance Market",
     "steps": [
-      { "title": "Posting Barang", "text": "Upload barang bekasmu lengkap dengan harga dan kategori." },
-      { "title": "Negosiasi & Chat", "text": "Pembeli menghubungi via chat internal untuk tawar menawar." },
-      { "title": "Transaksi Aman", "text": "Kesepakatan harga, barang diambil/dikirim (simulasi)." },
-      { "title": "Beri Rating", "text": "Bangun reputasi sebagai penjual terpercaya di lingkungan kampus." }
+      {
+        "title": "Posting Barang",
+        "text": "Upload barang bekasmu lengkap dengan harga dan kategori."
+      },
+      {
+        "title": "Negosiasi & Chat",
+        "text": "Pembeli menghubungi via chat internal untuk tawar menawar."
+      },
+      {
+        "title": "Transaksi Aman",
+        "text": "Kesepakatan harga, barang diambil/dikirim (simulasi)."
+      },
+      {
+        "title": "Beri Rating",
+        "text": "Bangun reputasi sebagai penjual terpercaya di lingkungan kampus."
+      }
     ]
   },
   "testimoni": {
     "sectionTitle": "Apa Kata Mereka?",
     "ctaButtonText": "Coba Sekarang",
     "items": [
-      { "id": 1, "name": "Dina", "major": "Informatika 2022", "text": "Aku bisa menjual lemari bekas sebelum pulang kampung. Fitur titip jual sangat membantu dan dalam dua hari barangku langsung laku." },
-      { "id": 2, "name": "Rizky", "major": "Sistem Informasi 2021", "text": "Second Chance Market membuatku lebih mudah menjual barang yang sudah tidak terpakai tanpa harus mencari pembeli sendiri." },
-      { "id": 3, "name": "Sarah", "major": "Teknik Industri 2023", "text": "Aku mendapatkan meja belajar dengan harga yang jauh lebih murah. Kondisinya masih bagus dan sesuai dengan deskripsi." },
-      { "id": 4, "name": "Andi", "major": "Teknik Informatika 2022", "text": "Fitur chat sangat memudahkan proses negosiasi. Semuanya terasa lebih praktis karena dilakukan dalam satu platform." },
-      { "id": 5, "name": "Nabila", "major": "Manajemen 2021", "text": "Platform ini membantu mahasiswa menghemat pengeluaran sekaligus mengurangi barang bekas yang tidak terpakai." }
+      {
+        "id": 1,
+        "name": "Dina",
+        "major": "Informatika 2022",
+        "text": "Aku bisa menjual lemari bekas sebelum pulang kampung. Fitur titip jual sangat membantu dan dalam dua hari barangku langsung laku."
+      },
+      {
+        "id": 2,
+        "name": "Rizky",
+        "major": "Sistem Informasi 2021",
+        "text": "Second Chance Market membuatku lebih mudah menjual barang yang sudah tidak terpakai tanpa harus mencari pembeli sendiri."
+      },
+      {
+        "id": 3,
+        "name": "Sarah",
+        "major": "Teknik Industri 2023",
+        "text": "Aku mendapatkan meja belajar dengan harga yang jauh lebih murah. Kondisinya masih bagus dan sesuai dengan deskripsi."
+      },
+      {
+        "id": 4,
+        "name": "Andi",
+        "major": "Teknik Informatika 2022",
+        "text": "Fitur chat sangat memudahkan proses negosiasi. Semuanya terasa lebih praktis karena dilakukan dalam satu platform."
+      },
+      {
+        "id": 5,
+        "name": "Nabila",
+        "major": "Manajemen 2021",
+        "text": "Platform ini membantu mahasiswa menghemat pengeluaran sekaligus mengurangi barang bekas yang tidak terpakai."
+      }
     ]
   },
   "action": {
