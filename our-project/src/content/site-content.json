@@ -4,11 +4,11 @@
     "hero": "/uploads/hero.jpg"
   },
   "colors": {
-    "primary": "#3ca17e",
+    "primary": "#0f5444",
     "primaryHover": "#0f5444",
     "secondary": "#3ca17e",
     "accent": "#e2d8d8",
-    "background": "#3ca17e",
+    "background": "#20A04F",
     "textMain": "#ffffff",
     "textMuted": "#ffffff",
     "textMains": "#164c3b",
