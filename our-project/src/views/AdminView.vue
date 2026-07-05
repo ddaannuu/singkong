@@ -40,32 +40,6 @@
           <details class="panel" open>
             <summary>⚙️ Koneksi GitHub (untuk Publish)</summary>
             <div class="panel-body">
-              <div class="field">
-                <label>Owner (username/organisasi)</label>
-                <input v-model="gh.owner" placeholder="mis. johndoe" />
-              </div>
-              <div class="field">
-                <label>Nama Repo</label>
-                <input v-model="gh.repo" placeholder="mis. second-chance-market" />
-              </div>
-              <div class="field">
-                <label>Branch</label>
-                <input v-model="gh.branch" placeholder="main" />
-              </div>
-              <div class="field">
-                <label>Path file konten di repo</label>
-                <input v-model="gh.path" placeholder="src/content/site-content.json" />
-              </div>
-              <div class="field">
-                <label>Path folder gambar di repo</label>
-                <input v-model="gh.imagesPath" placeholder="public/uploads" />
-                <p class="hint">Kalau project Anda ada di dalam subfolder (mis. repo/our-project/), tulis lengkap: <code>our-project/public/uploads</code>. Kalau project ada di root repo, cukup <code>public/uploads</code>.</p>
-              </div>
-              <div class="field">
-                <label>Personal Access Token</label>
-                <input v-model="gh.token" type="password" placeholder="ghp_xxx atau github_pat_xxx" />
-                <p class="hint">Token disimpan hanya di browser ini (localStorage), tidak pernah dikirim ke mana pun selain api.github.com.</p>
-              </div>
               <div class="field-row">
                 <button class="btn-secondary" @click="saveGithubConfig">Simpan Pengaturan</button>
                 <button class="btn-secondary" @click="handleTestConnection" :disabled="testing">
