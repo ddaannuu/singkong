@@ -57,6 +57,11 @@
                 <input v-model="gh.path" placeholder="src/content/site-content.json" />
               </div>
               <div class="field">
+                <label>Path folder gambar di repo</label>
+                <input v-model="gh.imagesPath" placeholder="public/uploads" />
+                <p class="hint">Kalau project Anda ada di dalam subfolder (mis. repo/our-project/), tulis lengkap: <code>our-project/public/uploads</code>. Kalau project ada di root repo, cukup <code>public/uploads</code>.</p>
+              </div>
+              <div class="field">
                 <label>Personal Access Token</label>
                 <input v-model="gh.token" type="password" placeholder="ghp_xxx atau github_pat_xxx" />
                 <p class="hint">Token disimpan hanya di browser ini (localStorage), tidak pernah dikirim ke mana pun selain api.github.com.</p>
@@ -406,6 +411,7 @@ export default {
         repo: import.meta.env.VITE_GITHUB_REPO || '',
         branch: import.meta.env.VITE_GITHUB_BRANCH || 'main',
         path: import.meta.env.VITE_GITHUB_PATH || 'src/content/site-content.json',
+        imagesPath: import.meta.env.VITE_GITHUB_IMAGES_PATH || 'public/uploads',
         token: ''
       },
 
@@ -520,8 +526,8 @@ export default {
     },
 
     saveGithubConfig() {
-      const { owner, repo, branch, path, token } = this.gh
-      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ owner, repo, branch, path }))
+      const { owner, repo, branch, path, imagesPath, token } = this.gh
+      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ owner, repo, branch, path, imagesPath }))
       if (token) localStorage.setItem(GH_TOKEN_KEY, token)
       this.testResult = { ok: true, message: 'Pengaturan disimpan di browser ini.' }
     },
@@ -564,7 +570,7 @@ export default {
 
           const { base64, mimeType, extension } = pending
           const filename = `${key}-${Date.now()}.${extension}`
-          const targetPath = `public/uploads/${filename}`
+          const targetPath = `${this.gh.imagesPath}/${filename}`
 
           this.imageState[key] = { uploading: true, result: null }
 
