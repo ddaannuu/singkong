@@ -1,14 +1,14 @@
 {
   "images": {
     "logo": "/uploads/logo.png",
-    "hero": "/uploads/hero.jpg"
+    "hero": "/uploads/hero-1783265849427.png"
   },
   "colors": {
-    "primary": "#3ca17e",
+    "primary": "#1e6f5c",
     "primaryHover": "#0f5444",
-    "secondary": "#3ca17e",
+    "secondary": "#3ca17es",
     "accent": "#e2d8d8",
-    "background": "#3ca17e",
+    "background": "#20A04F",
     "textMain": "#ffffff",
     "textMuted": "#ffffff",
     "textMains": "#164c3b",
