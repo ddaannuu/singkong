@@ -1,18 +1,19 @@
 <template>
   <div class="admin-page">
 
+    <!-- ================= LOADING SESSION ================= -->
+    <div v-if="checkingSession" class="login-box">
+      <p class="muted">Memuat...</p>
+    </div>
+
     <!-- ================= LOGIN GATE ================= -->
-    <div v-if="!authed" class="login-box">
+    <div v-else-if="!authed" class="login-box">
       <h1>🔐 Admin Login</h1>
       <p class="muted">Masuk untuk mengelola konten Second Chance Market.</p>
       <form @submit.prevent="handleLogin">
-        <input
-          v-model="passwordInput"
-          type="password"
-          placeholder="Password admin"
-          autofocus
-        />
-        <button type="submit">Masuk</button>
+        <input v-model="email" type="email" placeholder="Email admin" autofocus autocomplete="username" />
+        <input v-model="password" type="password" placeholder="Password" autocomplete="current-password" />
+        <button type="submit" :disabled="loggingIn">{{ loggingIn ? 'Memproses...' : 'Masuk' }}</button>
       </form>
       <p v-if="loginError" class="error-text">{{ loginError }}</p>
     </div>
@@ -36,23 +37,21 @@
         <!-- ============ EDITOR ============ -->
         <div class="editor-column">
 
-          <!-- GITHUB CONFIG -->
-          <details class="panel" open>
-            <summary>⚙️ Koneksi GitHub (untuk Publish)</summary>
+          <!-- STATUS KONEKSI -->
+          <details class="panel" v-if="contentStatus.error">
+            <summary>⚠️ Status Koneksi Supabase</summary>
             <div class="panel-body">
-            
-              <div class="field-row">
-                <button class="btn-secondary" @click="saveGithubConfig">Simpan Pengaturan</button>
-                <button class="btn-secondary" @click="handleTestConnection" :disabled="testing">
-                  {{ testing ? 'Menguji...' : 'Tes Koneksi' }}
-                </button>
-              </div>
-              <p v-if="testResult" :class="testResult.ok ? 'success-text' : 'error-text'">{{ testResult.message }}</p>
+              <p class="error-text">{{ contentStatus.error }}</p>
+              <p class="hint">
+                Website sedang menampilkan data cadangan bawaan (bukan data live), karena
+                gagal memuat dari Supabase. Cek env variable <code>VITE_SUPABASE_URL</code>
+                dan <code>VITE_SUPABASE_ANON_KEY</code>, lalu refresh halaman ini.
+              </p>
             </div>
           </details>
 
           <!-- COLORS -->
-          <details class="panel">
+          <details class="panel" open>
             <summary>🎨 Warna</summary>
             <div class="panel-body grid-2">
               <div class="field" v-for="f in colorFields" :key="f.key">
@@ -104,10 +103,9 @@
             <summary>🖼️ Gambar</summary>
             <div class="panel-body">
               <p class="hint">
-                Pilih gambar akan langsung terlihat di Live Preview (belum tersimpan permanen).
-                Gambar baru akan ikut ter-upload ke GitHub otomatis saat Anda klik
-                <strong>🚀 Publish ke GitHub</strong> di bagian bawah — jadi tidak perlu koneksi
-                GitHub aktif hanya untuk mencoba-coba tampilan gambar terlebih dahulu.
+                Gambar langsung ter-upload ke Supabase Storage begitu dipilih. Tetap klik
+                <strong>🚀 Publish</strong> di bagian bawah supaya perubahan referensinya
+                tersimpan dan terlihat oleh pengunjung.
               </p>
 
               <div v-for="img in imageFields" :key="img.key" class="list-item-block">
@@ -314,7 +312,7 @@
             <button class="btn-danger" @click="handleReset">↺ Reset ke Versi Live</button>
             <button class="btn-secondary" @click="handleDownloadJson">⬇ Download JSON</button>
             <button class="btn-primary" @click="handlePublish" :disabled="publishing">
-              {{ publishing ? 'Mempublikasikan...' : '🚀 Publish ke GitHub' }}
+              {{ publishing ? 'Mempublikasikan...' : '🚀 Publish' }}
             </button>
           </div>
           <p v-if="publishResult" :class="publishResult.ok ? 'success-text' : 'error-text'">{{ publishResult.message }}</p>
@@ -340,8 +338,8 @@
 </template>
 
 <script>
-import { content, discardDraft, hasDraft, getPublishedJson } from '../composables/useSiteContent'
-import { publishContent, testConnection, publishImage } from '../services/githubApi'
+import { content, contentStatus, discardDraft, hasDraft, getPublishedJson, markAsPublished } from '../composables/useSiteContent'
+import { signIn, signOut, getSession, onAuthStateChange, publishContentToSupabase, uploadImageToStorage } from '../services/supabaseApi'
 import { resizeImage } from '../utils/imageResize'
 
 import Navbar from '../components/Navbar.vue'
@@ -352,18 +350,6 @@ import Testimoni from '../components/Testimoni.vue'
 import Action from '../components/Action.vue'
 import Footer from '../components/Footer.vue'
 
-const SESSION_KEY = 'scm_admin_authed'
-const GH_CONFIG_KEY = 'scm_admin_gh_config'
-const GH_TOKEN_KEY = 'scm_admin_gh_token'
-
-async function sha256Hex(str) {
-  const bytes = new TextEncoder().encode(str)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', bytes)
-  return Array.from(new Uint8Array(hashBuffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
-}
-
 export default {
   name: 'AdminView',
 
@@ -372,35 +358,26 @@ export default {
   data() {
     return {
       content,
-      authed: false,
-      passwordInput: '',
-      loginError: '',
+      contentStatus,
 
-      testing: false,
-      testResult: null,
+      checkingSession: true,
+      authed: false,
+      email: '',
+      password: '',
+      loginError: '',
+      loggingIn: false,
+
       publishing: false,
       publishResult: null,
 
-      gh: {
-        owner: import.meta.env.VITE_GITHUB_OWNER || '',
-        repo: import.meta.env.VITE_GITHUB_REPO || '',
-        branch: import.meta.env.VITE_GITHUB_BRANCH || 'main',
-        path: import.meta.env.VITE_GITHUB_PATH || 'src/content/site-content.json',
-        imagesPath: import.meta.env.VITE_GITHUB_IMAGES_PATH || 'public/uploads',
-        token: ''
-      },
-
       imageFields: [
-        { key: 'logo', label: 'Logo', maxWidth: 400, path: 'public/uploads' },
-        { key: 'hero', label: 'Foto Hero', maxWidth: 1600, path: 'public/uploads' }
+        { key: 'logo', label: 'Logo', maxWidth: 400 },
+        { key: 'hero', label: 'Foto Hero', maxWidth: 1600 }
       ],
       imageState: {
         logo: { uploading: false, result: null },
         hero: { uploading: false, result: null }
       },
-      // Gambar yang sudah dipilih & di-resize secara lokal tapi BELUM
-      // di-upload ke GitHub (menunggu tombol "Publish ke GitHub").
-      pendingImages: {},
 
       colorFields: [
         { key: 'primary', label: 'Warna Utama (Primary)' },
@@ -457,9 +434,17 @@ export default {
     }
   },
 
-  created() {
-    this.authed = sessionStorage.getItem(SESSION_KEY) === '1'
-    this.loadGithubConfig()
+  async created() {
+    const session = await getSession()
+    this.authed = !!session
+    this.checkingSession = false
+    this._authSub = onAuthStateChange((session) => {
+      this.authed = !!session
+    })
+  },
+
+  beforeUnmount() {
+    if (this._authSub) this._authSub.unsubscribe()
   },
 
   methods: {
@@ -469,54 +454,42 @@ export default {
 
     async handleLogin() {
       this.loginError = ''
-      const configuredHash = import.meta.env.VITE_ADMIN_PASSWORD_HASH
-      if (!configuredHash) {
-        this.loginError = 'VITE_ADMIN_PASSWORD_HASH belum diatur di environment variables. Lihat SETUP-ADMIN.md.'
-        return
-      }
-      const inputHash = await sha256Hex(this.passwordInput)
-      if (inputHash.toLowerCase() === configuredHash.toLowerCase()) {
+      this.loggingIn = true
+      try {
+        await signIn(this.email, this.password)
         this.authed = true
-        sessionStorage.setItem(SESSION_KEY, '1')
-        this.passwordInput = ''
-      } else {
-        this.loginError = 'Password salah. Coba lagi.'
-      }
-    },
-
-    handleLogout() {
-      this.authed = false
-      sessionStorage.removeItem(SESSION_KEY)
-    },
-
-    loadGithubConfig() {
-      try {
-        const raw = localStorage.getItem(GH_CONFIG_KEY)
-        if (raw) Object.assign(this.gh, JSON.parse(raw))
-        const token = localStorage.getItem(GH_TOKEN_KEY)
-        if (token) this.gh.token = token
+        this.password = ''
       } catch (e) {
-        console.warn('Gagal memuat konfigurasi GitHub:', e)
-      }
-    },
-
-    saveGithubConfig() {
-      const { owner, repo, branch, path, imagesPath, token } = this.gh
-      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ owner, repo, branch, path, imagesPath }))
-      if (token) localStorage.setItem(GH_TOKEN_KEY, token)
-      this.testResult = { ok: true, message: 'Pengaturan disimpan di browser ini.' }
-    },
-
-    async handleTestConnection() {
-      this.testing = true
-      this.testResult = null
-      try {
-        await testConnection(this.gh)
-        this.testResult = { ok: true, message: '✅ Koneksi berhasil! Token & repo valid.' }
-      } catch (e) {
-        this.testResult = { ok: false, message: '❌ ' + e.message }
+        this.loginError = e.message
       } finally {
-        this.testing = false
+        this.loggingIn = false
+      }
+    },
+
+    async handleLogout() {
+      await signOut()
+      this.authed = false
+    },
+
+    async handleImageUpload(key, maxWidth, event) {
+      const file = event.target.files[0]
+      if (!file) return
+
+      this.imageState[key] = { uploading: true, result: null }
+
+      try {
+        const { blob, extension } = await resizeImage(file, { maxWidth })
+        const url = await uploadImageToStorage(key, blob, extension)
+
+        this.content.images[key] = url
+        this.imageState[key] = {
+          uploading: false,
+          result: { ok: true, message: '✅ Gambar terupload. Klik Publish di bawah supaya perubahan ini terlihat pengunjung.' }
+        }
+      } catch (e) {
+        this.imageState[key] = { uploading: false, result: { ok: false, message: '❌ ' + e.message } }
+      } finally {
+        event.target.value = ''
       }
     },
 
@@ -524,54 +497,11 @@ export default {
       this.publishing = true
       this.publishResult = null
       try {
-        if (!this.gh.owner || !this.gh.repo || !this.gh.token) {
-          throw new Error('Lengkapi dulu Owner, Repo, dan Token pada bagian Koneksi GitHub.')
-        }
-
-        // 1) Upload dulu semua gambar yang masih berupa preview lokal
-        //    (data URL), lalu ganti isi content.images dengan path final
-        //    di repo, supaya site-content.json yang di-publish tidak
-        //    berisi data URL raksasa, melainkan path bersih.
-        const pendingKeys = Object.keys(this.pendingImages)
-        for (const key of pendingKeys) {
-          const pending = this.pendingImages[key]
-
-          // Pengaman: kalau entri ini kosong/tidak valid, lewati saja
-          // daripada membuat proses publish gagal total.
-          if (!pending || !pending.base64) {
-            delete this.pendingImages[key]
-            continue
-          }
-
-          const { base64, mimeType, extension } = pending
-          const filename = `${key}-${Date.now()}.${extension}`
-          const targetPath = `${this.gh.imagesPath}/${filename}`
-
-          this.imageState[key] = { uploading: true, result: null }
-
-          await publishImage({
-            ...this.gh,
-            path: targetPath,
-            base64Content: base64,
-            commitMessage: `chore: upload gambar ${key} via Admin CMS`
-          })
-
-          this.content.images[key] = `/uploads/${filename}`
-          delete this.pendingImages[key]
-          this.imageState[key] = { uploading: false, result: { ok: true, message: '✅ Terupload ke GitHub.' } }
-        }
-
-        // 2) Publish site-content.json (sekarang sudah berisi path gambar
-        //    final, bukan data URL sementara).
-        await publishContent({
-          ...this.gh,
-          jsonString: getPublishedJson(),
-          commitMessage: 'chore: update konten website via Admin CMS'
-        })
-
+        await publishContentToSupabase(this.content)
+        markAsPublished(this.content)
         this.publishResult = {
           ok: true,
-          message: '✅ Berhasil dipublikasikan! Vercel akan otomatis mem-build ulang, biasanya selesai dalam ~1 menit.'
+          message: '✅ Berhasil dipublikasikan! Perubahan langsung tayang untuk semua pengunjung, tanpa perlu build ulang.'
         }
       } catch (e) {
         this.publishResult = { ok: false, message: '❌ Gagal publish: ' + e.message }
@@ -583,11 +513,6 @@ export default {
     handleReset() {
       if (confirm('Semua perubahan yang belum di-publish akan hilang dan kembali ke versi live terakhir. Lanjutkan?')) {
         discardDraft()
-        this.pendingImages = {}
-        this.imageState = {
-          logo: { uploading: false, result: null },
-          hero: { uploading: false, result: null }
-        }
         this.publishResult = null
       }
     },
@@ -600,32 +525,6 @@ export default {
       a.download = 'site-content.json'
       a.click()
       URL.revokeObjectURL(url)
-    },
-
-    async handleImageUpload(key, maxWidth, event) {
-      const file = event.target.files[0]
-      if (!file) return
-
-      this.imageState[key] = { uploading: true, result: null }
-
-      try {
-        const { base64, mimeType, extension } = await resizeImage(file, { maxWidth })
-
-        // Simpan sebagai "pending" — belum dikirim ke GitHub. Preview
-        // (data URL) langsung dipasang ke content.images supaya terlihat
-        // instan di Live Preview, dan ikut tersimpan di draft localStorage.
-        this.pendingImages[key] = { base64, mimeType, extension }
-        this.content.images[key] = `data:${mimeType};base64,${base64}`
-
-        this.imageState[key] = {
-          uploading: false,
-          result: { ok: true, message: 'ℹ️ Preview lokal terpasang. Belum di-upload ke GitHub — klik Publish di bawah untuk menyimpannya permanen.' }
-        }
-      } catch (e) {
-        this.imageState[key] = { uploading: false, result: { ok: false, message: '❌ ' + e.message } }
-      } finally {
-        event.target.value = ''
-      }
     },
 
     addTestimoni() {
@@ -675,6 +574,7 @@ export default {
   font-weight: 700;
   cursor: pointer;
 }
+.login-box button:disabled { opacity: 0.6; cursor: wait; }
 
 .muted { color: #6b7a73; font-size: 0.9rem; }
 .error-text { color: #d33; margin-top: 10px; font-size: 0.9rem; }
@@ -759,7 +659,6 @@ export default {
   font-family: inherit;
   resize: vertical;
 }
-.field-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
 .color-row { display: flex; gap: 8px; align-items: center; }
 .color-row input[type="color"] { width: 42px; height: 38px; padding: 2px; border-radius: 8px; }

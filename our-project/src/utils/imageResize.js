@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Resize gambar di sisi browser sebelum di-upload, supaya ukuran file di
-// repo GitHub tetap ringan (foto dari HP seringkali beberapa MB / terlalu
-// besar untuk sebuah website).
+// Supabase Storage tetap ringan (foto dari HP seringkali beberapa MB /
+// terlalu besar untuk sebuah website).
 // ---------------------------------------------------------------------------
 
 /**
@@ -9,7 +9,7 @@
  * @param {Object} opts
  * @param {number} opts.maxWidth - lebar maksimum hasil resize
  * @param {number} opts.quality - kualitas kompresi untuk JPEG (0-1)
- * @returns {Promise<{ base64: string, mimeType: string, extension: string }>}
+ * @returns {Promise<{ blob: Blob, previewUrl: string, mimeType: string, extension: string }>}
  */
 export function resizeImage(file, { maxWidth = 1600, quality = 0.85 } = {}) {
   return new Promise((resolve, reject) => {
@@ -40,10 +40,18 @@ export function resizeImage(file, { maxWidth = 1600, quality = 0.85 } = {}) {
         const mimeType = isPng ? 'image/png' : 'image/jpeg'
         const extension = isPng ? 'png' : 'jpg'
 
-        const dataUrl = canvas.toDataURL(mimeType, isPng ? undefined : quality)
-        const base64 = dataUrl.split(',')[1]
-
-        resolve({ base64, mimeType, extension })
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error('Gagal memproses gambar.'))
+              return
+            }
+            const previewUrl = canvas.toDataURL(mimeType, isPng ? undefined : quality)
+            resolve({ blob, previewUrl, mimeType, extension })
+          },
+          mimeType,
+          isPng ? undefined : quality
+        )
       }
 
       img.src = reader.result

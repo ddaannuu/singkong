@@ -1,5 +1,6 @@
 import { reactive, watch } from 'vue'
-import defaultContent from '../content/site-content.json'
+import fallbackContent from '../content/site-content.json'
+import { fetchPublishedContent, subscribeToContentChanges } from '../services/supabaseApi'
 
 // ---------------------------------------------------------------------------
 // SINGLE SOURCE OF TRUTH
@@ -9,29 +10,15 @@ import defaultContent from '../content/site-content.json'
 //  2. Halaman /admin — read & write (live preview langsung terlihat karena
 //     sama-sama menunjuk ke objek reactive yang sama)
 //
-// Saat pertama kali dibuka, kita coba muat draft yang tersimpan di
-// localStorage (perubahan admin yang BELUM di-publish ke GitHub). Kalau
-// tidak ada draft, pakai isi bawaan dari site-content.json (yaitu versi
-// yang sudah live / sudah pernah di-publish sebelumnya, karena file ini
-// ikut ter-bundle ulang setiap kali Vercel build).
+// Sumber data sebenarnya sekarang ada di Supabase (tabel `site_content`).
+// `content/site-content.json` yang ikut ter-bundle hanya dipakai sebagai:
+//   a) tampilan awal super cepat sebelum data dari Supabase selesai dimuat
+//      (menghindari layar kosong / flash-of-empty-content)
+//   b) fallback kalau koneksi ke Supabase gagal (mis. env var belum diatur,
+//      internet putus, dsb.)
 // ---------------------------------------------------------------------------
 
 const DRAFT_KEY = 'scm_admin_draft_v1'
-
-function loadInitialContent() {
-  try {
-    const raw = localStorage.getItem(DRAFT_KEY)
-    if (raw) {
-      const draft = JSON.parse(raw)
-      // merge dangkal per section supaya field baru dari default tetap ada
-      // walau draft lama belum punya field tersebut
-      return deepMerge(structuredClone(defaultContent), draft)
-    }
-  } catch (e) {
-    console.warn('Gagal memuat draft admin dari localStorage:', e)
-  }
-  return structuredClone(defaultContent)
-}
 
 function deepMerge(base, override) {
   if (Array.isArray(override)) return override
@@ -43,30 +30,61 @@ function deepMerge(base, override) {
   return result
 }
 
-export const content = reactive(loadInitialContent())
+export const content = reactive(structuredClone(fallbackContent))
 
-// Simpan otomatis ke localStorage setiap kali ada perubahan (draft autosave),
-// supaya kalau tab tidak sengaja ter-reload, edit yang belum di-publish
-// tidak hilang.
+// Menyimpan versi terakhir yang benar-benar "published" (dari Supabase),
+// dipakai oleh discardDraft() untuk kembali ke versi live, bukan ke
+// fallbackContent bawaan yang mungkin sudah usang.
+let publishedSnapshot = structuredClone(fallbackContent)
+
+// Status pemuatan awal, bisa dipakai komponen App.vue untuk skeleton/loading
+// state kalau diperlukan.
+export const contentStatus = reactive({ loading: true, error: null, loadedFromSupabase: false })
+
+// ---------------------------------------------------------------------------
+// DRAFT AUTOSAVE (localStorage) — supaya edit admin yang belum di-publish
+// tidak hilang kalau tab tidak sengaja ter-reload.
+// ---------------------------------------------------------------------------
+
 let saveTimeout = null
-watch(
-  content,
-  (val) => {
-    clearTimeout(saveTimeout)
-    saveTimeout = setTimeout(() => {
-      try {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(val))
-      } catch (e) {
-        console.warn('Gagal menyimpan draft admin:', e)
-      }
-    }, 300)
-  },
-  { deep: true }
-)
+let draftWatcherStarted = false
+
+function startDraftAutosave() {
+  if (draftWatcherStarted) return
+  draftWatcherStarted = true
+  watch(
+    content,
+    (val) => {
+      clearTimeout(saveTimeout)
+      saveTimeout = setTimeout(() => {
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(val))
+        } catch (e) {
+          console.warn('Gagal menyimpan draft admin:', e)
+        }
+      }, 300)
+    },
+    { deep: true }
+  )
+}
+
+function applyDraftIfAny() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY)
+    if (raw) {
+      const draft = JSON.parse(raw)
+      const merged = deepMerge(structuredClone(publishedSnapshot), draft)
+      Object.keys(content).forEach((k) => delete content[k])
+      Object.assign(content, merged)
+    }
+  } catch (e) {
+    console.warn('Gagal memuat draft admin dari localStorage:', e)
+  }
+}
 
 export function discardDraft() {
   localStorage.removeItem(DRAFT_KEY)
-  const fresh = structuredClone(defaultContent)
+  const fresh = structuredClone(publishedSnapshot)
   Object.keys(content).forEach((k) => delete content[k])
   Object.assign(content, fresh)
 }
@@ -76,17 +94,63 @@ export function hasDraft() {
 }
 
 export function getPublishedJson() {
-  // JSON yang akan dikirim ke GitHub saat tombol "Publish" ditekan
   return JSON.stringify(content, null, 2)
 }
 
 // ---------------------------------------------------------------------------
-// CSS VARIABLE MAPPING
+// MEMUAT KONTEN DARI SUPABASE
 // ---------------------------------------------------------------------------
-// Setiap kali `content.colors`, `content.typography`, atau `content.layout`
-// berubah, kita tulis ulang CSS custom properties di :root. Karena semua
-// CSS yang sudah ada (main.css) sudah memakai var(--xxx), tampilan akan
-// ter-update secara realtime tanpa perlu mengubah struktur/desain apa pun.
+
+export async function loadPublishedContent() {
+  try {
+    const data = await fetchPublishedContent()
+    publishedSnapshot = structuredClone(data)
+    contentStatus.loadedFromSupabase = true
+    contentStatus.error = null
+
+    // Kalau ada draft admin yang belum di-publish, tetap prioritaskan draft
+    // itu (supaya kalau admin sedang mengedit lalu ke-refresh, tidak balik
+    // ke versi lama). Kalau tidak ada draft, langsung pakai data terbaru.
+    if (hasDraft()) {
+      applyDraftIfAny()
+    } else {
+      Object.keys(content).forEach((k) => delete content[k])
+      Object.assign(content, structuredClone(data))
+    }
+  } catch (e) {
+    console.warn('Gagal memuat konten dari Supabase, memakai fallback bawaan:', e)
+    contentStatus.error = e.message
+  } finally {
+    contentStatus.loading = false
+  }
+}
+
+/**
+ * Dipanggil setelah admin berhasil publish, supaya "versi live" yang
+ * dipakai discardDraft() ikut ter-update tanpa perlu fetch ulang.
+ */
+export function markAsPublished(newContentSnapshot) {
+  publishedSnapshot = structuredClone(newContentSnapshot)
+  localStorage.removeItem(DRAFT_KEY)
+}
+
+/**
+ * Sinkronisasi realtime: kalau ada publish dari sesi/tab lain, konten di
+ * tab ini ikut ter-update otomatis (selama tidak sedang ada draft lokal
+ * yang belum disimpan, supaya tidak menimpa edit yang sedang berlangsung).
+ */
+export function initRealtimeSync() {
+  return subscribeToContentChanges((newContent) => {
+    publishedSnapshot = structuredClone(newContent)
+    if (!hasDraft()) {
+      Object.keys(content).forEach((k) => delete content[k])
+      Object.assign(content, structuredClone(newContent))
+    }
+  })
+}
+
+// ---------------------------------------------------------------------------
+// CSS VARIABLE MAPPING
 // ---------------------------------------------------------------------------
 
 const CSS_VAR_MAP = {
@@ -153,9 +217,13 @@ function applyCssVars() {
 
 export function initSiteContent() {
   applyCssVars()
+  applyDraftIfAny()
+  startDraftAutosave()
   watch(
     () => [content.colors, content.typography, content.layout],
     applyCssVars,
     { deep: true }
   )
+  // Muat data asli dari Supabase secara asinkron (tidak blocking render).
+  loadPublishedContent()
 }
