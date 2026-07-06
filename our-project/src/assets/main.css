@@ -19,7 +19,7 @@
     --text-muted: #ffffff;
     --text-mains: #164c3b;
     --text-muteds: #3e6b5d;
-    --bg-gradient: hsla(143.04,66.14%,37.06%,1);
+    --bg-gradient: #20A04F;
     --white-alpha: rgba(255, 255, 255, 0.95);
     --button-text-color: #ffffff;
     --navbar-bg: var(--white-alpha);
@@ -179,6 +179,7 @@ body {
     justify-content: space-between;
     padding: 40px var(--section-padding-x) 60px;
     gap: 30px;
+    background: var(--bg-gradient);
 }
 
 .hero-left {
