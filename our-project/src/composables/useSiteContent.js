@@ -20,6 +20,14 @@ import { fetchPublishedContent, subscribeToContentChanges } from '../services/su
 
 const DRAFT_KEY = 'scm_admin_draft_v1'
 
+// structuredClone() bawaan browser TIDAK bisa dipakai untuk objek reactive
+// Vue (Proxy) — akan error "could not be cloned". Karena semua data di
+// sini memang berupa data JSON biasa (string/angka/array/object), clone
+// lewat JSON.stringify+parse jauh lebih aman dan cukup untuk kebutuhan ini.
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
 function deepMerge(base, override) {
   if (Array.isArray(override)) return override
   if (typeof override !== 'object' || override === null) return override
@@ -30,12 +38,12 @@ function deepMerge(base, override) {
   return result
 }
 
-export const content = reactive(structuredClone(fallbackContent))
+export const content = reactive(clone(fallbackContent))
 
 // Menyimpan versi terakhir yang benar-benar "published" (dari Supabase),
 // dipakai oleh discardDraft() untuk kembali ke versi live, bukan ke
 // fallbackContent bawaan yang mungkin sudah usang.
-let publishedSnapshot = structuredClone(fallbackContent)
+let publishedSnapshot = clone(fallbackContent)
 
 // Status pemuatan awal, bisa dipakai komponen App.vue untuk skeleton/loading
 // state kalau diperlukan.
@@ -73,7 +81,7 @@ function applyDraftIfAny() {
     const raw = localStorage.getItem(DRAFT_KEY)
     if (raw) {
       const draft = JSON.parse(raw)
-      const merged = deepMerge(structuredClone(publishedSnapshot), draft)
+      const merged = deepMerge(clone(publishedSnapshot), draft)
       Object.keys(content).forEach((k) => delete content[k])
       Object.assign(content, merged)
     }
@@ -84,7 +92,7 @@ function applyDraftIfAny() {
 
 export function discardDraft() {
   localStorage.removeItem(DRAFT_KEY)
-  const fresh = structuredClone(publishedSnapshot)
+  const fresh = clone(publishedSnapshot)
   Object.keys(content).forEach((k) => delete content[k])
   Object.assign(content, fresh)
 }
@@ -104,7 +112,7 @@ export function getPublishedJson() {
 export async function loadPublishedContent() {
   try {
     const data = await fetchPublishedContent()
-    publishedSnapshot = structuredClone(data)
+    publishedSnapshot = clone(data)
     contentStatus.loadedFromSupabase = true
     contentStatus.error = null
 
@@ -115,7 +123,7 @@ export async function loadPublishedContent() {
       applyDraftIfAny()
     } else {
       Object.keys(content).forEach((k) => delete content[k])
-      Object.assign(content, structuredClone(data))
+      Object.assign(content, clone(data))
     }
   } catch (e) {
     console.warn('Gagal memuat konten dari Supabase, memakai fallback bawaan:', e)
@@ -130,7 +138,7 @@ export async function loadPublishedContent() {
  * dipakai discardDraft() ikut ter-update tanpa perlu fetch ulang.
  */
 export function markAsPublished(newContentSnapshot) {
-  publishedSnapshot = structuredClone(newContentSnapshot)
+  publishedSnapshot = clone(newContentSnapshot)
   localStorage.removeItem(DRAFT_KEY)
 }
 
@@ -141,10 +149,10 @@ export function markAsPublished(newContentSnapshot) {
  */
 export function initRealtimeSync() {
   return subscribeToContentChanges((newContent) => {
-    publishedSnapshot = structuredClone(newContent)
+    publishedSnapshot = clone(newContent)
     if (!hasDraft()) {
       Object.keys(content).forEach((k) => delete content[k])
-      Object.assign(content, structuredClone(newContent))
+      Object.assign(content, clone(newContent))
     }
   })
 }
