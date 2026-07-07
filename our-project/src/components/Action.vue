@@ -9,7 +9,7 @@
 
       <p class="action-desc">
         {{ content.action.descriptionLine1 }}<br>
-        <i class="fas fa-mouse-pointer"></i> {{ content.action.descriptionLine2 }}
+        {{ content.action.descriptionLine2 }}
       </p>
 
       <button @click="handleAction" class="btn-action-large">
