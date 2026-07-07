@@ -49,6 +49,29 @@ let publishedSnapshot = clone(fallbackContent)
 // state kalau diperlukan.
 export const contentStatus = reactive({ loading: true, error: null, loadedFromSupabase: false })
 
+// Draft (localStorage) HANYA boleh diterapkan saat sedang berada di halaman
+// /admin — flag ini yang menandai itu. Kalau false (kondisi normal di
+// halaman publik), sistem tidak boleh sama sekali mempertimbangkan draft,
+// supaya pengunjung/browser mana pun selalu melihat versi live dari
+// Supabase, bukan draft lama yang kebetulan tersimpan di browser tersebut.
+let adminDraftModeActive = false
+let initialLoadPromise = null
+
+export async function enableAdminDraftMode() {
+  adminDraftModeActive = true
+  // Tunggu proses fetch awal ke Supabase selesai dulu (kalau ada), supaya
+  // draft yang diterapkan di sini tidak langsung tertimpa begitu fetch
+  // tersebut baru selesai belakangan.
+  if (initialLoadPromise) await initialLoadPromise
+  if (!adminDraftModeActive) return // sempat di-disable saat menunggu
+  applyDraftIfAny()
+  startDraftAutosave()
+}
+
+export function disableAdminDraftMode() {
+  adminDraftModeActive = false
+}
+
 // ---------------------------------------------------------------------------
 // DRAFT AUTOSAVE (localStorage) — supaya edit admin yang belum di-publish
 // tidak hilang kalau tab tidak sengaja ter-reload.
@@ -116,15 +139,10 @@ export async function loadPublishedContent() {
     contentStatus.loadedFromSupabase = true
     contentStatus.error = null
 
-    // Kalau ada draft admin yang belum di-publish, tetap prioritaskan draft
-    // itu (supaya kalau admin sedang mengedit lalu ke-refresh, tidak balik
-    // ke versi lama). Kalau tidak ada draft, langsung pakai data terbaru.
-    if (hasDraft()) {
-      applyDraftIfAny()
-    } else {
-      Object.keys(content).forEach((k) => delete content[k])
-      Object.assign(content, clone(data))
-    }
+    // Halaman publik: SELALU pakai data live, tidak peduli ada draft atau
+    // tidak di localStorage browser ini.
+    Object.keys(content).forEach((k) => delete content[k])
+    Object.assign(content, clone(data))
   } catch (e) {
     console.warn('Gagal memuat konten dari Supabase, memakai fallback bawaan:', e)
     contentStatus.error = e.message
@@ -150,7 +168,10 @@ export function markAsPublished(newContentSnapshot) {
 export function initRealtimeSync() {
   return subscribeToContentChanges((newContent) => {
     publishedSnapshot = clone(newContent)
-    if (!hasDraft()) {
+    // Di halaman publik (adminDraftModeActive === false), selalu terapkan
+    // update realtime apa adanya. Di halaman admin, jangan timpa draft yang
+    // sedang diedit hanya karena ada publish dari sesi lain.
+    if (!(adminDraftModeActive && hasDraft())) {
       Object.keys(content).forEach((k) => delete content[k])
       Object.assign(content, clone(newContent))
     }
@@ -225,13 +246,18 @@ function applyCssVars() {
 
 export function initSiteContent() {
   applyCssVars()
-  applyDraftIfAny()
-  startDraftAutosave()
   watch(
     () => [content.colors, content.typography, content.layout],
     applyCssVars,
     { deep: true }
   )
   // Muat data asli dari Supabase secara asinkron (tidak blocking render).
-  loadPublishedContent()
+  // Promise-nya disimpan supaya AdminView bisa menunggu proses ini selesai
+  // dulu sebelum menerapkan draft (lihat enableAdminDraftMode).
+  initialLoadPromise = loadPublishedContent()
+  return initialLoadPromise
+}
+
+export function getInitialLoadPromise() {
+  return initialLoadPromise
 }

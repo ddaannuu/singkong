@@ -338,7 +338,7 @@
 </template>
 
 <script>
-import { content, contentStatus, discardDraft, hasDraft, getPublishedJson, markAsPublished } from '../composables/useSiteContent'
+import { content, contentStatus, discardDraft, hasDraft, getPublishedJson, markAsPublished, enableAdminDraftMode, disableAdminDraftMode } from '../composables/useSiteContent'
 import { signIn, signOut, getSession, onAuthStateChange, publishContentToSupabase, uploadImageToStorage } from '../services/supabaseApi'
 import { resizeImage } from '../utils/imageResize'
 
@@ -435,6 +435,7 @@ export default {
   },
 
   async created() {
+    enableAdminDraftMode()
     const session = await getSession()
     this.authed = !!session
     this.checkingSession = false
@@ -445,6 +446,7 @@ export default {
 
   beforeUnmount() {
     if (this._authSub) this._authSub.unsubscribe()
+    disableAdminDraftMode()
   },
 
   methods: {
