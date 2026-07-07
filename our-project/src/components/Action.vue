@@ -13,7 +13,7 @@
       </p>
 
       <button @click="handleAction" class="btn-action-large">
-        <i class="fas fa-hand-peace"></i> {{ content.action.buttonText }}
+         {{ content.action.buttonText }}
       </button>
     </div>
   </section>
