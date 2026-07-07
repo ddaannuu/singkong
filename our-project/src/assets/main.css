@@ -580,12 +580,13 @@ footer p {
 */
 .action-section {
     padding: 0 var(--section-padding-x) 50px;
+    background: var(--card-bg);
 }
 
 .action-inner {
     max-width: var(--container-max-width);
     margin: 0 auto;
-    background: #ffffff;
+    background: var(--bg-gradient);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-card);
     padding: 50px 30px;
