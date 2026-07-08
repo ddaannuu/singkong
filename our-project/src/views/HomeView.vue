@@ -2,6 +2,7 @@
   <Navbar />
   <HeroSection />
   <About/>
+  <Stat />
   <FeaturesSection />
   <HowItWorks />
   <Testimoni />
@@ -18,6 +19,7 @@ import Testimoni from '../components/Testimoni.vue'
 import Action from '../components/Action.vue'
 import Footer from '../components/Footer.vue'
 import About from '../components/About.vue'
+import Stat from '../components/Stat.vue'
 
 export default {
   components: {
@@ -28,6 +30,7 @@ export default {
     HowItWorks,
     Testimoni,
     Action,
+    Stat,
     Footer
   }
 }
