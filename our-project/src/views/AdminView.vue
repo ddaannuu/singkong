@@ -402,6 +402,8 @@
           <div class="preview-frame">
             <Navbar />
             <HeroSection />
+            <About />
+            <Stat />
             <FeaturesSection />
             <HowItWorks />
             <Testimoni />
