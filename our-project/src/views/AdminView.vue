@@ -177,84 +177,6 @@
             </div>
           </details>
 
-                    <!-- ============================================================
-              SNIPPET PANEL ADMIN — Tentang Kami & Statistik
-              ============================================================
-              Tempelkan blok <details> di bawah ini ke bagian TEMPLATE admin
-              Anda, di mana pun Anda mau panel ini muncul (biasanya di antara
-              panel-panel konten lain, di dalam kolom editor).
-
-              SYARAT: file admin Anda harus sudah:
-              1. import { content } from '.../composables/useSiteContent'
-              2. punya `content` di dalam data() atau setup(), supaya bisa
-                  dipakai langsung di template seperti di bawah ini
-          ============================================================= -->
-
-          <!-- TENTANG KAMI -->
-          <details class="panel">
-            <summary>Tentang Kami</summary>
-            <div class="panel-body">
-              <div class="field">
-                <label>Label Badge</label>
-                <input v-model="content.about.badge" />
-              </div>
-              <div class="field">
-                <label>Judul (sebelum highlight)</label>
-                <input v-model="content.about.titleBefore" />
-              </div>
-              <div class="field">
-                <label>Judul (bagian highlight)</label>
-                <input v-model="content.about.titleHighlight" />
-              </div>
-              <div class="field">
-                <label>Judul (baris kedua)</label>
-                <input v-model="content.about.titleAfter" />
-              </div>
-              <div class="field">
-                <label>Paragraf Pembuka</label>
-                <textarea v-model="content.about.subtitle" rows="3"></textarea>
-              </div>
-              <div class="field">
-                <label>Judul Kartu Misi</label>
-                <input v-model="content.about.missionTitle" />
-              </div>
-              <div class="field">
-                <label>Isi Kartu Misi</label>
-                <textarea v-model="content.about.missionText" rows="3"></textarea>
-              </div>
-              <div class="field">
-                <label>Judul Kartu Visi</label>
-                <input v-model="content.about.visionTitle" />
-              </div>
-              <div class="field">
-                <label>Isi Kartu Visi</label>
-                <textarea v-model="content.about.visionText" rows="3"></textarea>
-              </div>
-            </div>
-          </details>
-
-          <!-- STATISTIK -->
-          <details class="panel">
-            <summary>Statistik</summary>
-            <div class="panel-body">
-              <label class="sub-label">Daftar Statistik</label>
-              <div v-for="(stat, i) in content.stats.items" :key="i" class="list-item-block">
-                <div class="field">
-                  <label>Angka</label>
-                  <input v-model="stat.number" placeholder="5.000+" />
-                </div>
-                <div class="field">
-                  <label>Label</label>
-                  <input v-model="stat.label" placeholder="Mahasiswa Terdaftar" />
-                </div>
-                <button class="btn-danger-mini" @click="content.stats.items.splice(i, 1)">Hapus Statistik Ini</button>
-              </div>
-              <button class="btn-add" @click="content.stats.items.push({ number: '0', label: 'Label Baru' })">Tambah Statistik</button>
-            </div>
-          </details>
-
-
-
           <!-- FEATURES -->
           <details class="panel">
             <summary>⭐ Fitur</summary>
@@ -837,4 +759,3 @@ export default {
   background: white;
 }
 </style>
-
