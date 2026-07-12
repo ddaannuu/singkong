@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import LandingPage from '../views/LandingPage.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'landing-page',
+    component: LandingPage
   },
   {
     // Lazy-loaded supaya kode admin (form, GitHub API, dll) tidak ikut

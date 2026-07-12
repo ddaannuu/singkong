@@ -1,6 +1,5 @@
 <template>
   <div class="admin-page">
-
     <!-- ================= LOADING SESSION ================= -->
     <div v-if="checkingSession" class="login-box">
       <p class="muted">Memuat...</p>
@@ -11,16 +10,28 @@
       <h1>🔐 Admin Login</h1>
       <p class="muted">Masuk untuk mengelola konten Second Chance Market.</p>
       <form @submit.prevent="handleLogin">
-        <input v-model="email" type="email" placeholder="Email admin" autofocus autocomplete="username" />
-        <input v-model="password" type="password" placeholder="Password" autocomplete="current-password" />
-        <button type="submit" :disabled="loggingIn">{{ loggingIn ? 'Memproses...' : 'Masuk' }}</button>
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Email admin"
+          autofocus
+          autocomplete="username"
+        />
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+        <button type="submit" :disabled="loggingIn">
+          {{ loggingIn ? 'Memproses...' : 'Masuk' }}
+        </button>
       </form>
       <p v-if="loginError" class="error-text">{{ loginError }}</p>
     </div>
 
     <!-- ================= ADMIN PANEL ================= -->
     <div v-else class="admin-shell">
-
       <header class="admin-header">
         <div>
           <h1>🛠️ Admin — Second Chance Market</h1>
@@ -33,19 +44,17 @@
       </header>
 
       <div class="admin-layout">
-
         <!-- ============ EDITOR ============ -->
         <div class="editor-column">
-
           <!-- STATUS KONEKSI -->
           <details class="panel" v-if="contentStatus.error">
             <summary>⚠️ Status Koneksi Supabase</summary>
             <div class="panel-body">
               <p class="error-text">{{ contentStatus.error }}</p>
               <p class="hint">
-                Website sedang menampilkan data cadangan bawaan (bukan data live), karena
-                gagal memuat dari Supabase. Cek env variable <code>VITE_SUPABASE_URL</code>
-                dan <code>VITE_SUPABASE_ANON_KEY</code>, lalu refresh halaman ini.
+                Website sedang menampilkan data cadangan bawaan (bukan data live), karena gagal
+                memuat dari Supabase. Cek env variable <code>VITE_SUPABASE_URL</code> dan
+                <code>VITE_SUPABASE_ANON_KEY</code>, lalu refresh halaman ini.
               </p>
             </div>
           </details>
@@ -104,8 +113,8 @@
             <div class="panel-body">
               <p class="hint">
                 Gambar langsung ter-upload ke Supabase Storage begitu dipilih. Tetap klik
-                <strong>🚀 Publish</strong> di bagian bawah supaya perubahan referensinya
-                tersimpan dan terlihat oleh pengunjung.
+                <strong>🚀 Publish</strong> di bagian bawah supaya perubahan referensinya tersimpan
+                dan terlihat oleh pengunjung.
               </p>
 
               <div v-for="img in imageFields" :key="img.key" class="list-item-block">
@@ -116,8 +125,13 @@
                   accept="image/*"
                   @change="(e) => handleImageUpload(img.key, img.maxWidth, e)"
                 />
-                <p v-if="imageState[img.key].uploading" class="hint">⏳ Mengunggah & mengompres gambar...</p>
-                <p v-if="imageState[img.key].result" :class="imageState[img.key].result.ok ? 'success-text' : 'error-text'">
+                <p v-if="imageState[img.key].uploading" class="hint">
+                  ⏳ Mengunggah & mengompres gambar...
+                </p>
+                <p
+                  v-if="imageState[img.key].result"
+                  :class="imageState[img.key].result.ok ? 'success-text' : 'error-text'"
+                >
                   {{ imageState[img.key].result.message }}
                 </p>
               </div>
@@ -142,7 +156,12 @@
                 <input v-model="item.href" placeholder="#link" />
                 <button class="btn-danger-mini" @click="content.navbar.menu.splice(i, 1)">✕</button>
               </div>
-              <button class="btn-add" @click="content.navbar.menu.push({ label: 'Menu Baru', href: '#' })">+ Tambah Menu</button>
+              <button
+                class="btn-add"
+                @click="content.navbar.menu.push({ label: 'Menu Baru', href: '#' })"
+              >
+                + Tambah Menu
+              </button>
             </div>
           </details>
 
@@ -177,7 +196,7 @@
             </div>
           </details>
 
-                    <!-- ============================================================
+          <!-- ============================================================
               SNIPPET PANEL ADMIN — Tentang Kami & Statistik
               ============================================================
               Tempelkan blok <details> di bawah ini ke bagian TEMPLATE admin
@@ -247,13 +266,18 @@
                   <label>Label</label>
                   <input v-model="stat.label" placeholder="Mahasiswa Terdaftar" />
                 </div>
-                <button class="btn-danger-mini" @click="content.stats.items.splice(i, 1)">Hapus Statistik Ini</button>
+                <button class="btn-danger-mini" @click="content.stats.items.splice(i, 1)">
+                  Hapus Statistik Ini
+                </button>
               </div>
-              <button class="btn-add" @click="content.stats.items.push({ number: '0', label: 'Label Baru' })">Tambah Statistik</button>
+              <button
+                class="btn-add"
+                @click="content.stats.items.push({ number: '0', label: 'Label Baru' })"
+              >
+                Tambah Statistik
+              </button>
             </div>
           </details>
-
-
 
           <!-- FEATURES -->
           <details class="panel">
@@ -285,9 +309,22 @@
                   <label>Deskripsi</label>
                   <textarea v-model="item.text" rows="2"></textarea>
                 </div>
-                <button class="btn-danger-mini" @click="content.features.items.splice(i, 1)">✕ Hapus Fitur Ini</button>
+                <button class="btn-danger-mini" @click="content.features.items.splice(i, 1)">
+                  ✕ Hapus Fitur Ini
+                </button>
               </div>
-              <button class="btn-add" @click="content.features.items.push({ icon: 'fas fa-star', title: 'Fitur Baru', text: 'Deskripsi fitur.' })">+ Tambah Fitur</button>
+              <button
+                class="btn-add"
+                @click="
+                  content.features.items.push({
+                    icon: 'fas fa-star',
+                    title: 'Fitur Baru',
+                    text: 'Deskripsi fitur.',
+                  })
+                "
+              >
+                + Tambah Fitur
+              </button>
             </div>
           </details>
 
@@ -309,9 +346,21 @@
                   <label>Deskripsi</label>
                   <textarea v-model="step.text" rows="2"></textarea>
                 </div>
-                <button class="btn-danger-mini" @click="content.howItWorks.steps.splice(i, 1)">✕ Hapus Langkah Ini</button>
+                <button class="btn-danger-mini" @click="content.howItWorks.steps.splice(i, 1)">
+                  ✕ Hapus Langkah Ini
+                </button>
               </div>
-              <button class="btn-add" @click="content.howItWorks.steps.push({ title: 'Langkah Baru', text: 'Deskripsi langkah.' })">+ Tambah Langkah</button>
+              <button
+                class="btn-add"
+                @click="
+                  content.howItWorks.steps.push({
+                    title: 'Langkah Baru',
+                    text: 'Deskripsi langkah.',
+                  })
+                "
+              >
+                + Tambah Langkah
+              </button>
             </div>
           </details>
 
@@ -328,7 +377,11 @@
                 <input v-model="content.testimoni.ctaButtonText" />
               </div>
               <label class="sub-label">Daftar Testimoni</label>
-              <div v-for="(item, i) in content.testimoni.items" :key="item.id" class="list-item-block">
+              <div
+                v-for="(item, i) in content.testimoni.items"
+                :key="item.id"
+                class="list-item-block"
+              >
                 <div class="field">
                   <label>Nama</label>
                   <input v-model="item.name" />
@@ -341,7 +394,9 @@
                   <label>Isi Testimoni</label>
                   <textarea v-model="item.text" rows="2"></textarea>
                 </div>
-                <button class="btn-danger-mini" @click="content.testimoni.items.splice(i, 1)">✕ Hapus Testimoni Ini</button>
+                <button class="btn-danger-mini" @click="content.testimoni.items.splice(i, 1)">
+                  ✕ Hapus Testimoni Ini
+                </button>
               </div>
               <button class="btn-add" @click="addTestimoni">+ Tambah Testimoni</button>
             </div>
@@ -393,7 +448,9 @@
               {{ publishing ? 'Mempublikasikan...' : '🚀 Publish' }}
             </button>
           </div>
-          <p v-if="publishResult" :class="publishResult.ok ? 'success-text' : 'error-text'">{{ publishResult.message }}</p>
+          <p v-if="publishResult" :class="publishResult.ok ? 'success-text' : 'error-text'">
+            {{ publishResult.message }}
+          </p>
         </div>
 
         <!-- ============ LIVE PREVIEW ============ -->
@@ -411,31 +468,56 @@
             <Footer />
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { content, contentStatus, discardDraft, hasDraft, getPublishedJson, markAsPublished, enableAdminDraftMode, disableAdminDraftMode } from '../composables/useSiteContent'
-import { signIn, signOut, getSession, onAuthStateChange, publishContentToSupabase, uploadImageToStorage } from '../services/supabaseApi'
+import {
+  content,
+  contentStatus,
+  discardDraft,
+  hasDraft,
+  getPublishedJson,
+  markAsPublished,
+  enableAdminDraftMode,
+  disableAdminDraftMode,
+} from '../composables/useSiteContent'
+import {
+  signIn,
+  signOut,
+  getSession,
+  onAuthStateChange,
+  publishContentToSupabase,
+  uploadImageToStorage,
+} from '../services/supabaseApi'
 import { resizeImage } from '../utils/imageResize'
 
 import Navbar from '../components/Navbar.vue'
-import HeroSection from '../components/HeroSection.vue'
+import HeroSection from '../components/landing-page/HeroSection.vue/index.js'
 import About from '../components/About.vue'
-import Stat from '../components/Stat.vue'
+import Stat from '../components/landing-page/Stat.vue/index.js'
 import FeaturesSection from '../components/FeaturesSection.vue'
 import HowItWorks from '../components/HowItWorks.vue'
 import Testimoni from '../components/Testimoni.vue'
-import Action from '../components/Action.vue'
+import Action from '../components/landing-page/Action.vue/index.js'
 import Footer from '../components/Footer.vue'
 
 export default {
   name: 'AdminView',
 
-  components: { Navbar, HeroSection, About, Stat, FeaturesSection, HowItWorks, Testimoni, Action, Footer },
+  components: {
+    Navbar,
+    HeroSection,
+    About,
+    Stat,
+    FeaturesSection,
+    HowItWorks,
+    Testimoni,
+    Action,
+    Footer,
+  },
 
   data() {
     return {
@@ -454,11 +536,11 @@ export default {
 
       imageFields: [
         { key: 'logo', label: 'Logo', maxWidth: 400 },
-        { key: 'hero', label: 'Foto Hero', maxWidth: 1600 }
+        { key: 'hero', label: 'Foto Hero', maxWidth: 1600 },
       ],
       imageState: {
         logo: { uploading: false, result: null },
-        hero: { uploading: false, result: null }
+        hero: { uploading: false, result: null },
       },
 
       colorFields: [
@@ -480,7 +562,7 @@ export default {
         { key: 'borderColor', label: 'Warna Border/Garis' },
         { key: 'iconColor', label: 'Warna Icon' },
         { key: 'ctaAccent', label: 'Warna Tombol Section Ajakan (CTA)' },
-        { key: 'ctaAccentHover', label: 'Warna Tombol CTA saat Hover' }
+        { key: 'ctaAccentHover', label: 'Warna Tombol CTA saat Hover' },
       ],
 
       typographyFields: [
@@ -493,7 +575,7 @@ export default {
         { key: 'captionSize', label: 'Ukuran Caption' },
         { key: 'captionWeight', label: 'Ketebalan Caption' },
         { key: 'buttonTextSize', label: 'Ukuran Teks Tombol' },
-        { key: 'buttonTextWeight', label: 'Ketebalan Teks Tombol' }
+        { key: 'buttonTextWeight', label: 'Ketebalan Teks Tombol' },
       ],
 
       layoutFields: [
@@ -505,15 +587,15 @@ export default {
         { key: 'sectionPaddingX', label: 'Padding Kiri/Kanan Section' },
         { key: 'sectionPaddingY', label: 'Padding Atas/Bawah Section' },
         { key: 'containerMaxWidth', label: 'Lebar Maksimum Konten' },
-        { key: 'gridGap', label: 'Jarak Antar Grid/Card' }
-      ]
+        { key: 'gridGap', label: 'Jarak Antar Grid/Card' },
+      ],
     }
   },
 
   computed: {
     draftExists() {
       return hasDraft()
-    }
+    },
   },
 
   async created() {
@@ -568,10 +650,17 @@ export default {
         this.content.images[key] = url
         this.imageState[key] = {
           uploading: false,
-          result: { ok: true, message: '✅ Gambar terupload. Klik Publish di bawah supaya perubahan ini terlihat pengunjung.' }
+          result: {
+            ok: true,
+            message:
+              '✅ Gambar terupload. Klik Publish di bawah supaya perubahan ini terlihat pengunjung.',
+          },
         }
       } catch (e) {
-        this.imageState[key] = { uploading: false, result: { ok: false, message: '❌ ' + e.message } }
+        this.imageState[key] = {
+          uploading: false,
+          result: { ok: false, message: '❌ ' + e.message },
+        }
       } finally {
         event.target.value = ''
       }
@@ -585,7 +674,8 @@ export default {
         markAsPublished(this.content)
         this.publishResult = {
           ok: true,
-          message: '✅ Berhasil dipublikasikan! Perubahan langsung tayang untuk semua pengunjung, tanpa perlu build ulang.'
+          message:
+            '✅ Berhasil dipublikasikan! Perubahan langsung tayang untuk semua pengunjung, tanpa perlu build ulang.',
         }
       } catch (e) {
         this.publishResult = { ok: false, message: '❌ Gagal publish: ' + e.message }
@@ -595,7 +685,11 @@ export default {
     },
 
     handleReset() {
-      if (confirm('Semua perubahan yang belum di-publish akan hilang dan kembali ke versi live terakhir. Lanjutkan?')) {
+      if (
+        confirm(
+          'Semua perubahan yang belum di-publish akan hilang dan kembali ke versi live terakhir. Lanjutkan?',
+        )
+      ) {
         discardDraft()
         this.publishResult = null
       }
@@ -613,9 +707,14 @@ export default {
 
     addTestimoni() {
       const maxId = this.content.testimoni.items.reduce((m, it) => Math.max(m, it.id), 0)
-      this.content.testimoni.items.push({ id: maxId + 1, name: 'Nama', major: 'Jurusan', text: 'Isi testimoni.' })
-    }
-  }
+      this.content.testimoni.items.push({
+        id: maxId + 1,
+        name: 'Nama',
+        major: 'Jurusan',
+        text: 'Isi testimoni.',
+      })
+    },
+  },
 }
 </script>
 
@@ -634,7 +733,7 @@ export default {
   background: white;
   padding: 40px;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
 .login-box form {
@@ -658,11 +757,25 @@ export default {
   font-weight: 700;
   cursor: pointer;
 }
-.login-box button:disabled { opacity: 0.6; cursor: wait; }
+.login-box button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
 
-.muted { color: #6b7a73; font-size: 0.9rem; }
-.error-text { color: #d33; margin-top: 10px; font-size: 0.9rem; }
-.success-text { color: #1e7d3c; margin-top: 10px; font-size: 0.9rem; }
+.muted {
+  color: #6b7a73;
+  font-size: 0.9rem;
+}
+.error-text {
+  color: #d33;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+.success-text {
+  color: #1e7d3c;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
 
 /* ---------- SHELL ---------- */
 .admin-header {
@@ -673,10 +786,17 @@ export default {
   gap: 12px;
   padding: 20px 30px;
   background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
-.admin-header h1 { font-size: 1.3rem; margin: 0; }
-.header-actions { display: flex; align-items: center; gap: 14px; }
+.admin-header h1 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .badge-draft {
   background: #fff4d6;
   color: #916800;
@@ -695,7 +815,9 @@ export default {
 }
 
 @media (max-width: 1000px) {
-  .admin-layout { grid-template-columns: 1fr; }
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- EDITOR ---------- */
@@ -708,7 +830,7 @@ export default {
 .panel {
   background: white;
   border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
 .panel summary {
@@ -717,7 +839,9 @@ export default {
   cursor: pointer;
   list-style: none;
 }
-.panel summary::-webkit-details-marker { display: none; }
+.panel summary::-webkit-details-marker {
+  display: none;
+}
 .panel-body {
   padding: 4px 20px 20px;
   display: flex;
@@ -730,12 +854,23 @@ export default {
   gap: 14px;
 }
 @media (max-width: 600px) {
-  .grid-2 { grid-template-columns: 1fr; }
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
 }
 
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field label { font-size: 0.8rem; font-weight: 600; color: #45564d; }
-.field input, .field textarea {
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #45564d;
+}
+.field input,
+.field textarea {
   padding: 9px 12px;
   border-radius: 8px;
   border: 1px solid #d6ddd9;
@@ -744,18 +879,38 @@ export default {
   resize: vertical;
 }
 
-.color-row { display: flex; gap: 8px; align-items: center; }
-.color-row input[type="color"] { width: 42px; height: 38px; padding: 2px; border-radius: 8px; }
-.color-row input[type="text"] { flex: 1; }
+.color-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.color-row input[type='color'] {
+  width: 42px;
+  height: 38px;
+  padding: 2px;
+  border-radius: 8px;
+}
+.color-row input[type='text'] {
+  flex: 1;
+}
 
-.sub-label { font-weight: 700; font-size: 0.85rem; margin-top: 6px; }
+.sub-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
 
 .list-item {
   display: flex;
   gap: 8px;
   align-items: center;
 }
-.list-item input { flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid #d6ddd9; }
+.list-item input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d6ddd9;
+}
 
 .list-item-block {
   border: 1px solid #e5eae7;
@@ -791,7 +946,11 @@ export default {
   font-weight: 600;
 }
 
-.hint { font-size: 0.75rem; color: #8a9690; margin: 0; }
+.hint {
+  font-size: 0.75rem;
+  color: #8a9690;
+  margin: 0;
+}
 
 .image-preview {
   max-width: 100%;
@@ -810,7 +969,9 @@ export default {
   flex-wrap: wrap;
   padding: 16px 4px;
 }
-.btn-primary, .btn-secondary, .btn-danger {
+.btn-primary,
+.btn-secondary,
+.btn-danger {
   padding: 12px 20px;
   border-radius: 10px;
   border: none;
@@ -818,10 +979,22 @@ export default {
   font-weight: 700;
   font-size: 0.9rem;
 }
-.btn-primary { background: #1e6f5c; color: white; }
-.btn-primary:disabled { opacity: 0.6; cursor: wait; }
-.btn-secondary { background: #eef2f0; color: #1f2d27; }
-.btn-danger { background: #fdeaea; color: #c0392b; }
+.btn-primary {
+  background: #1e6f5c;
+  color: white;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.btn-secondary {
+  background: #eef2f0;
+  color: #1f2d27;
+}
+.btn-danger {
+  background: #fdeaea;
+  color: #c0392b;
+}
 
 /* ---------- PREVIEW ---------- */
 .preview-column {
@@ -841,4 +1014,3 @@ export default {
   background: white;
 }
 </style>
-

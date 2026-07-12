@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { content } from '../composables/useSiteContent'
+import { content } from '../../composables/useSiteContent'
 
 export default {
   name: "Testimoni",
