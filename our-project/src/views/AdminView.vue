@@ -18,7 +18,13 @@
 
     <!-- ================= DASHBOARD ================= -->
     <div v-else class="adm-shell">
-      <AdminSidebar v-model="activeSection" :sections="sections" @logout="handleLogout" />
+      <AdminSidebar
+        v-model="activeSection"
+        :sections="sections"
+        :open="sidebarOpen"
+        @logout="handleLogout"
+        @close="sidebarOpen = false"
+      />
 
       <div class="adm-main">
         <AdminTopBar
@@ -31,6 +37,7 @@
           @reset="handleReset"
           @download="handleDownloadJson"
           @toggle-preview="previewOpen = !previewOpen"
+          @toggle-sidebar="sidebarOpen = !sidebarOpen"
         />
 
         <div class="adm-body" :class="{ 'adm-body-split': previewOpen }">
@@ -183,6 +190,9 @@ const activeSectionMeta = computed(() => sections.find((s) => s.key === activeSe
 // ---------- Preview ----------
 const previewOpen = ref(false)
 
+// ---------- Mobile sidebar drawer ----------
+const sidebarOpen = ref(false)
+
 // ---------- Publish / draft actions ----------
 const publishing = ref(false)
 const publishResult = ref(null)
@@ -279,5 +289,29 @@ function handleDownloadJson() {
 .adm-preview-frame {
   flex: 1;
   overflow-y: auto;
+}
+
+/* ---------- Mobile / narrow tablet ---------- */
+@media (max-width: 1000px) {
+  .adm-body-split {
+    flex-direction: column;
+  }
+
+  .adm-body-split .adm-content {
+    max-width: none;
+  }
+
+  .adm-preview-pane {
+    position: static;
+    width: 100%;
+    min-width: 0;
+    height: 70vh;
+    border-left: none;
+    border-top: 1px solid var(--adm-border);
+  }
+}
+
+@media (max-width: 640px) {
+  .adm-preview-pane { height: 60vh; }
 }
 </style>

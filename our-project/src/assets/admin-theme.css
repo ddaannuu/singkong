@@ -331,6 +331,42 @@
   line-height: 1.5;
 }
 
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .adm-content {
+    padding: 18px 16px 48px;
+  }
+
+  .adm-page-title { font-size: 19px; }
+  .adm-page-subtitle { margin-bottom: 18px; }
+
+  .adm-panel-header {
+    padding: 14px 16px;
+  }
+
+  .adm-panel-body {
+    padding: 16px;
+  }
+
+  .adm-item-card {
+    padding: 14px;
+  }
+
+  .adm-image-row {
+    flex-direction: column;
+  }
+
+  .adm-btn {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .adm-panel-title { font-size: 14px; }
+  .adm-panel-title i { font-size: 13px; }
+}
+
 /* ---------- Scrollbar (subtle) ---------- */
 .adm-sidebar::-webkit-scrollbar { width: 6px; }
 .adm-sidebar::-webkit-scrollbar-thumb { background: var(--adm-sidebar-border); border-radius: 3px; }

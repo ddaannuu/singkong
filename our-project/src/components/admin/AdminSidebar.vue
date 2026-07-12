@@ -1,11 +1,17 @@
 <template>
-  <aside class="adm-sidebar">
+  <!-- Backdrop only shows on mobile when drawer is open -->
+  <div v-if="open" class="adm-sidebar-backdrop" @click="$emit('close')"></div>
+
+  <aside class="adm-sidebar" :class="{ 'is-open': open }">
     <div class="adm-sidebar-brand">
       <div class="adm-sidebar-logo"><i class="fas fa-recycle"></i></div>
       <div>
         <div class="adm-sidebar-brand-name">Second Chance</div>
         <div class="adm-sidebar-brand-sub">Admin Panel</div>
       </div>
+      <button type="button" class="adm-sidebar-close" @click="$emit('close')">
+        <i class="fas fa-xmark"></i>
+      </button>
     </div>
 
     <nav class="adm-sidebar-nav">
@@ -16,7 +22,7 @@
         type="button"
         class="adm-sidebar-link"
         :class="{ 'is-active': modelValue === item.key }"
-        @click="$emit('update:modelValue', item.key)"
+        @click="handleSelect(item.key)"
       >
         <i :class="item.icon"></i>
         <span>{{ item.label }}</span>
@@ -35,9 +41,15 @@
 <script setup>
 defineProps({
   modelValue: { type: String, default: 'design' },
-  sections: { type: Array, required: true }
+  sections: { type: Array, required: true },
+  open: { type: Boolean, default: false } // controls the mobile drawer only
 })
-defineEmits(['update:modelValue', 'logout'])
+const emit = defineEmits(['update:modelValue', 'logout', 'close'])
+
+function handleSelect(key) {
+  emit('update:modelValue', key)
+  emit('close') // no-op on desktop, closes the drawer on mobile
+}
 </script>
 
 <style scoped>
@@ -60,6 +72,25 @@ defineEmits(['update:modelValue', 'logout'])
   gap: 12px;
   padding: 22px 20px;
   border-bottom: 1px solid var(--adm-sidebar-border);
+}
+
+.adm-sidebar-close {
+  display: none;
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  border-radius: var(--adm-radius-sm);
+  color: var(--adm-sidebar-text);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.adm-sidebar-backdrop {
+  display: none;
 }
 
 .adm-sidebar-logo {
@@ -142,5 +173,34 @@ defineEmits(['update:modelValue', 'logout'])
 .adm-sidebar-logout:hover {
   background: rgba(193, 67, 47, 0.18);
   color: #f3a08f;
+}
+
+/* ---------- Mobile: off-canvas drawer ---------- */
+@media (max-width: 900px) {
+  .adm-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 22, 21, 0.55);
+    z-index: 40;
+  }
+
+  .adm-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    box-shadow: var(--adm-shadow-lg);
+  }
+
+  .adm-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .adm-sidebar-close {
+    display: flex;
+  }
 }
 </style>

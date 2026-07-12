@@ -69,6 +69,10 @@ defineEmits(['update:email', 'update:password', 'submit'])
   padding: 36px 32px;
 }
 
+@media (max-width: 420px) {
+  .adm-login-box { padding: 28px 22px; }
+}
+
 .adm-login-logo {
   width: 44px;
   height: 44px;

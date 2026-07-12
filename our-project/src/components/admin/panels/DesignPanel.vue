@@ -132,6 +132,8 @@ const layoutFields = [
   gap: 6px;
   margin-bottom: 16px;
   border-bottom: 1px solid var(--adm-border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .adm-tab {
@@ -147,6 +149,8 @@ const layoutFields = [
   border-bottom: 2px solid transparent;
   cursor: pointer;
   font-family: var(--adm-font);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .adm-tab:hover { color: var(--adm-text-main); }
