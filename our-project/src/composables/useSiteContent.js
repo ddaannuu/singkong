@@ -49,11 +49,6 @@ let publishedSnapshot = clone(fallbackContent)
 // state kalau diperlukan.
 export const contentStatus = reactive({ loading: true, error: null, loadedFromSupabase: false })
 
-// Draft (localStorage) HANYA boleh diterapkan saat sedang berada di halaman
-// /admin — flag ini yang menandai itu. Kalau false (kondisi normal di
-// halaman publik), sistem tidak boleh sama sekali mempertimbangkan draft,
-// supaya pengunjung/browser mana pun selalu melihat versi live dari
-// Supabase, bukan draft lama yang kebetulan tersimpan di browser tersebut.
 let adminDraftModeActive = false
 let initialLoadPromise = null
 
