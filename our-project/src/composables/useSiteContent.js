@@ -130,14 +130,21 @@ export function getPublishedJson() {
 export async function loadPublishedContent() {
   try {
     const data = await fetchPublishedContent()
-    publishedSnapshot = clone(data)
+
+    // Digabung (deep merge) dengan fallbackContent, bukan menimpa mentah-
+    // mentah — supaya field yang baru ditambahkan di kode (mis. "about",
+    // "stats") tetap punya nilai default yang wajar walau baris di database
+    // Supabase belum diperbarui / belum pernah di-publish ulang sejak field
+    // itu ditambahkan.
+    const merged = deepMerge(clone(fallbackContent), clone(data))
+    publishedSnapshot = clone(merged)
     contentStatus.loadedFromSupabase = true
     contentStatus.error = null
 
     // Halaman publik: SELALU pakai data live, tidak peduli ada draft atau
     // tidak di localStorage browser ini.
     Object.keys(content).forEach((k) => delete content[k])
-    Object.assign(content, clone(data))
+    Object.assign(content, merged)
   } catch (e) {
     console.warn('Gagal memuat konten dari Supabase, memakai fallback bawaan:', e)
     contentStatus.error = e.message
@@ -162,13 +169,11 @@ export function markAsPublished(newContentSnapshot) {
  */
 export function initRealtimeSync() {
   return subscribeToContentChanges((newContent) => {
-    publishedSnapshot = clone(newContent)
-    // Di halaman publik (adminDraftModeActive === false), selalu terapkan
-    // update realtime apa adanya. Di halaman admin, jangan timpa draft yang
-    // sedang diedit hanya karena ada publish dari sesi lain.
+    const merged = deepMerge(clone(fallbackContent), clone(newContent))
+    publishedSnapshot = clone(merged)
     if (!(adminDraftModeActive && hasDraft())) {
       Object.keys(content).forEach((k) => delete content[k])
-      Object.assign(content, clone(newContent))
+      Object.assign(content, merged)
     }
   })
 }

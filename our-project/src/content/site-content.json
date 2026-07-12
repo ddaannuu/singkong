@@ -66,6 +66,25 @@
     "primaryBtnText": "Mulai Jelajahi",
     "outlineBtnText": "Lihat Demo"
   },
+  "about": {
+    "badge": "Tentang Kami",
+    "titleBefore": "Membangun",
+    "titleHighlight": "Ekonomi Sirkular",
+    "titleAfter": "di Lingkungan Kampus",
+    "subtitle": "Second Chance Market hadir untuk memudahkan mahasiswa Indonesia menjual, membeli, dan menukar barang bekas layak pakai — lebih hemat di kantong, lebih ramah untuk lingkungan.",
+    "missionTitle": "Misi Kami",
+    "missionText": "Menciptakan ekosistem jual-beli barang bekas yang aman, terpercaya, dan mudah diakses oleh seluruh mahasiswa — sambil mengurangi limbah dari barang yang masih layak pakai.",
+    "visionTitle": "Visi Kami",
+    "visionText": "Menjadi marketplace kampus nomor satu di Indonesia yang membentuk kebiasaan konsumsi yang lebih bijak dan berkelanjutan sejak bangku kuliah."
+  },
+  "stats": {
+    "items": [
+      { "number": "5.000+", "label": "Mahasiswa Terdaftar" },
+      { "number": "12.000+", "label": "Barang Terjual" },
+      { "number": "30+", "label": "Kampus Bergabung" },
+      { "number": "4.8/5", "label": "Rating Pengguna" }
+    ]
+  },
   "features": {
     "sectionTitle": "Fitur Andalan untuk Warga",
     "introBold": "Tak perlu repot pindahan atau bingung menjual barang saat pulang kampung.",
@@ -109,27 +128,8 @@
   "footer": {
     "line1": "Second Chance Market — Edukasi Marketplace untuk Mahasiswa Indonesia",
     "line2": "🌱 Hijau, kolaboratif, dan hemat | © 2025 Simulasi Pembelajaran Informatika"
-  },
-
-  "about": {
-    "badge": "Tentang Kami",
-    "titleBefore": "Membangun",
-    "titleHighlight": "Ekonomi Sirkular",
-    "titleAfter": "di Lingkungan Kampus",
-    "subtitle": "Second Chance Market hadir untuk memudahkan mahasiswa Indonesia menjual, membeli, dan menukar barang bekas layak pakai — lebih hemat di kantong, lebih ramah untuk lingkungan.",
-    "missionTitle": "Misi Kami",
-    "missionText": "Menciptakan ekosistem jual-beli barang bekas yang aman, terpercaya, dan mudah diakses oleh seluruh mahasiswa — sambil mengurangi limbah dari barang yang masih layak pakai.",
-    "visionTitle": "Visi Kami",
-    "visionText": "Menjadi marketplace kampus nomor satu di Indonesia yang membentuk kebiasaan konsumsi yang lebih bijak dan berkelanjutan sejak bangku kuliah."
-  },
-  "stats": {
-    "items": [
-      { "number": "5.000+", "label": "Mahasiswa Terdaftar" },
-      { "number": "12.000+", "label": "Barang Terjual" },
-      { "number": "30+", "label": "Kampus Bergabung" },
-      { "number": "4.8/5", "label": "Rating Pengguna" }
-    ]
   }
+  
 }
   
 
