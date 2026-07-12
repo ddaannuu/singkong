@@ -1,0 +1,336 @@
+/* ==========================================================================
+   Admin Dashboard — Design Tokens
+   Second Chance Market — dark teal sidebar, warm gold accent
+   ========================================================================== */
+
+:root {
+  /* Sidebar */
+  --adm-sidebar-bg: #0c2b2a;
+  --adm-sidebar-bg-active: #14403e;
+  --adm-sidebar-border: #1c4644;
+  --adm-sidebar-text: #9fc2bd;
+  --adm-sidebar-text-active: #ffffff;
+  --adm-sidebar-width: 264px;
+
+  /* Canvas */
+  --adm-bg: #f2f5f4;
+  --adm-card-bg: #ffffff;
+  --adm-border: #e1e8e6;
+  --adm-border-soft: #edf2f1;
+
+  /* Text */
+  --adm-text-main: #142927;
+  --adm-text-muted: #61756f;
+  --adm-text-faint: #93a5a0;
+
+  /* Accent */
+  --adm-accent: #c99a3f;
+  --adm-accent-hover: #b3862f;
+  --adm-accent-soft: #f6ecd6;
+  --adm-teal-accent: #0f6f66;
+
+  /* Status */
+  --adm-success: #1a8f5e;
+  --adm-success-bg: #e7f6ee;
+  --adm-danger: #c1432f;
+  --adm-danger-bg: #fbeae6;
+
+  /* Shape */
+  --adm-radius-sm: 6px;
+  --adm-radius-md: 10px;
+  --adm-radius-lg: 16px;
+  --adm-shadow-sm: 0 1px 2px rgba(10, 35, 33, 0.06);
+  --adm-shadow-md: 0 4px 16px rgba(10, 35, 33, 0.08);
+  --adm-shadow-lg: 0 12px 32px rgba(10, 35, 33, 0.14);
+
+  /* Type */
+  --adm-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.adm-root {
+  font-family: var(--adm-font);
+  color: var(--adm-text-main);
+  background: var(--adm-bg);
+}
+
+/* ---------- Layout shell ---------- */
+.adm-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--adm-bg);
+}
+
+.adm-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-content {
+  flex: 1;
+  padding: 28px 32px 64px;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ---------- Panel / Card ---------- */
+.adm-panel {
+  background: var(--adm-card-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-lg);
+  box-shadow: var(--adm-shadow-sm);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.adm-panel-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--adm-border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.adm-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--adm-text-main);
+}
+
+.adm-panel-title i {
+  color: var(--adm-teal-accent);
+  font-size: 14px;
+}
+
+.adm-panel-desc {
+  font-size: 13px;
+  color: var(--adm-text-muted);
+  margin-top: 2px;
+}
+
+.adm-panel-body {
+  padding: 22px 24px;
+}
+
+/* ---------- Page header ---------- */
+.adm-page-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+
+.adm-page-subtitle {
+  font-size: 14px;
+  color: var(--adm-text-muted);
+  margin: 0 0 24px;
+}
+
+/* ---------- Grid ---------- */
+.adm-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+
+@media (max-width: 720px) {
+  .adm-grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ---------- Fields ---------- */
+.adm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.adm-field:last-child { margin-bottom: 0; }
+
+.adm-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adm-text-muted);
+  text-transform: none;
+}
+
+.adm-input,
+.adm-textarea,
+.adm-select {
+  font-family: var(--adm-font);
+  font-size: 14px;
+  color: var(--adm-text-main);
+  background: #fff;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  padding: 9px 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
+}
+
+.adm-input:focus,
+.adm-textarea:focus,
+.adm-select:focus {
+  outline: none;
+  border-color: var(--adm-teal-accent);
+  box-shadow: 0 0 0 3px rgba(15, 111, 102, 0.12);
+}
+
+.adm-textarea {
+  resize: vertical;
+  min-height: 64px;
+  line-height: 1.5;
+}
+
+.adm-color-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.adm-color-swatch {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  padding: 0;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  cursor: pointer;
+  background: none;
+}
+
+/* ---------- Buttons ---------- */
+.adm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--adm-font);
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: var(--adm-radius-sm);
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.adm-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.adm-btn-primary {
+  background: var(--adm-teal-accent);
+  color: #fff;
+}
+.adm-btn-primary:hover:not(:disabled) { background: #0b5a52; }
+
+.adm-btn-accent {
+  background: var(--adm-accent);
+  color: #2a1e05;
+}
+.adm-btn-accent:hover:not(:disabled) { background: var(--adm-accent-hover); }
+
+.adm-btn-secondary {
+  background: #fff;
+  color: var(--adm-text-main);
+  border-color: var(--adm-border);
+}
+.adm-btn-secondary:hover:not(:disabled) { border-color: var(--adm-teal-accent); color: var(--adm-teal-accent); }
+
+.adm-btn-danger {
+  background: #fff;
+  color: var(--adm-danger);
+  border-color: #f0d3cc;
+}
+.adm-btn-danger:hover:not(:disabled) { background: var(--adm-danger-bg); }
+
+.adm-btn-add {
+  background: var(--adm-accent-soft);
+  color: #6b4f14;
+  align-self: flex-start;
+}
+.adm-btn-add:hover { background: #f0e0b8; }
+
+.adm-btn-icon-danger {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--adm-radius-sm);
+  border: 1px solid var(--adm-border);
+  background: #fff;
+  color: var(--adm-text-faint);
+  cursor: pointer;
+}
+.adm-btn-icon-danger:hover { background: var(--adm-danger-bg); color: var(--adm-danger); border-color: #f0d3cc; }
+
+/* ---------- Repeatable item card ---------- */
+.adm-item-card {
+  border: 1px solid var(--adm-border-soft);
+  background: #fafcfb;
+  border-radius: var(--adm-radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.adm-item-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.adm-item-index {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--adm-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.adm-list-item-inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* ---------- Badges / status text ---------- */
+.adm-badge-draft {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #8a6412;
+  background: var(--adm-accent-soft);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.adm-status-text {
+  font-size: 13.5px;
+  border-radius: var(--adm-radius-sm);
+  padding: 10px 14px;
+  margin-top: 12px;
+}
+.adm-status-success { background: var(--adm-success-bg); color: var(--adm-success); }
+.adm-status-error { background: var(--adm-danger-bg); color: var(--adm-danger); }
+
+.adm-hint {
+  font-size: 12.5px;
+  color: var(--adm-text-faint);
+  line-height: 1.5;
+}
+
+/* ---------- Scrollbar (subtle) ---------- */
+.adm-sidebar::-webkit-scrollbar { width: 6px; }
+.adm-sidebar::-webkit-scrollbar-thumb { background: var(--adm-sidebar-border); border-radius: 3px; }
