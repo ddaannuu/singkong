@@ -424,6 +424,8 @@ import { resizeImage } from '../utils/imageResize'
 
 import Navbar from '../components/Navbar.vue'
 import HeroSection from '../components/HeroSection.vue'
+import About from '../components/About.vue'
+import Stat from '../components/Stat.vue'
 import FeaturesSection from '../components/FeaturesSection.vue'
 import HowItWorks from '../components/HowItWorks.vue'
 import Testimoni from '../components/Testimoni.vue'
@@ -433,7 +435,7 @@ import Footer from '../components/Footer.vue'
 export default {
   name: 'AdminView',
 
-  components: { Navbar, HeroSection, FeaturesSection, HowItWorks, Testimoni, Action, Footer },
+  components: { Navbar, HeroSection, About, Stat, FeaturesSection, HowItWorks, Testimoni, Action, Footer },
 
   data() {
     return {
