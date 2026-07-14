@@ -1,77 +1,74 @@
 <template>
   <div class="market-page">
 
-    <!-- ================= PROMO BANNER ================= -->
-    <section class="promo-banner">
-      <div class="banner-track" :style="{ transform: `translateX(-${bannerIndex * 100}%)` }">
-        <div class="banner-slide" v-for="(slide, i) in banners" :key="i" :style="{ background: slide.bg }">
-          <div class="banner-text">
-            <span class="banner-tag">{{ slide.tag }}</span>
-            <h2>{{ slide.title }}</h2>
-            <p>{{ slide.desc }}</p>
-          </div>
+    <!-- ================= HERO / BANNER ================= -->
+    <section class="hero-banner">
+      <div class="hero-track" :style="{ transform: `translateX(-${bannerIndex * 100}%)` }">
+        <div class="hero-slide" v-for="(slide, i) in banners" :key="i">
+          <span class="hero-tag">{{ slide.tag }}</span>
+          <h2>{{ slide.title }}</h2>
+          <p>{{ slide.desc }}</p>
         </div>
       </div>
-      <div class="banner-dots">
-        <span
+      <div class="hero-dots">
+        <button
           v-for="(slide, i) in banners"
           :key="i"
-          class="banner-dot"
+          class="hero-dot"
           :class="{ active: bannerIndex === i }"
           @click="bannerIndex = i"
-        ></span>
+          :aria-label="'Slide ' + (i + 1)"
+        ></button>
       </div>
     </section>
 
-    <!-- ================= SEARCH ================= -->
-    <section class="market-search">
+    <!-- ================= FILTER BAR ================= -->
+    <section class="filter-bar">
       <div class="search-bar">
         <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <input v-model="searchQuery" type="text" placeholder="Cari buku, elektronik, perlengkapan kos..." />
       </div>
 
-      <!-- Kategori dengan ikon -->
-      <div class="category-icons">
+      <div class="chip-row">
         <button
           v-for="cat in categories"
           :key="cat.name"
-          class="category-item"
+          class="chip"
           :class="{ active: activeCategory === cat.name }"
           @click="activeCategory = cat.name"
         >
-          <span class="category-icon" v-html="cat.icon"></span>
-          <span>{{ cat.name }}</span>
+          <span class="chip-icon" v-html="cat.icon"></span>
+          {{ cat.name }}
         </button>
       </div>
     </section>
 
-    <!-- ================= TABS ================= -->
-    <section class="market-tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab.key"
-        class="tab-btn"
-        :class="{ active: activeTab === tab.key }"
-        @click="activeTab = tab.key"
-      >
-        <svg v-if="tab.key === 'all'" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
-        <svg v-else-if="tab.key === 'preorder'" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9.5h18" stroke="currentColor" stroke-width="2"/><path d="M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <svg v-else viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M4 7.5L12 12l8-4.5M12 12v9" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-        {{ tab.label }}
-      </button>
-    </section>
+    <!-- ================= TABS + TOOLBAR ================= -->
+    <section class="control-row">
+      <div class="tab-group" role="tablist">
+        <button
+          v-for="tab in tabs"
+          :key="tab.key"
+          class="tab-btn"
+          role="tab"
+          :aria-selected="activeTab === tab.key"
+          :class="{ active: activeTab === tab.key }"
+          @click="activeTab = tab.key"
+        >
+          {{ tab.label }}
+        </button>
+      </div>
 
-    <!-- ================= SORT & RESULT COUNT ================= -->
-    <section class="market-toolbar">
-      <p class="result-count">{{ filteredProducts.length }} produk ditemukan</p>
-      <div class="sort-select">
-        <label>Urutkan:</label>
-        <select v-model="sortBy">
-          <option value="terbaru">Terbaru</option>
-          <option value="termurah">Harga Terendah</option>
-          <option value="termahal">Harga Tertinggi</option>
-          <option value="terlaris">Terlaris</option>
-        </select>
+      <div class="toolbar-meta">
+        <p class="result-count">{{ filteredProducts.length }} produk</p>
+        <div class="sort-select">
+          <select v-model="sortBy" aria-label="Urutkan produk">
+            <option value="terbaru">Terbaru</option>
+            <option value="termurah">Harga Terendah</option>
+            <option value="termahal">Harga Tertinggi</option>
+            <option value="terlaris">Terlaris</option>
+          </select>
+        </div>
       </div>
     </section>
 
@@ -123,28 +120,23 @@
             </div>
           </template>
 
-          <!-- Badge diskon -->
+          <!-- Badge diskon (satu-satunya badge berwarna) -->
           <span v-if="discountPercent(product)" class="badge badge-discount">
             -{{ discountPercent(product) }}%
           </span>
 
-          <!-- Badge tipe produk -->
-          <span v-if="product.type === 'preorder'" class="badge badge-preorder">
-            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <!-- Badge tipe produk (netral) -->
+          <span v-if="product.type === 'preorder'" class="badge badge-neutral badge-top">
             {{ formatDate(product.availableDate) }}
           </span>
-          <span v-else-if="product.type === 'bundling'" class="badge badge-bundle">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          <span v-else-if="product.type === 'bundling'" class="badge badge-neutral badge-top">
             Bundling
           </span>
-
-          <!-- Kondisi barang -->
-          <span class="badge-condition">{{ product.condition }}</span>
         </div>
 
         <!-- Info produk -->
         <div class="product-info">
-          <p class="product-category">{{ product.category }}</p>
+          <p class="product-category">{{ product.category }} · {{ product.condition }}</p>
           <h3 class="product-title">{{ product.title }}</h3>
 
           <div class="price-row">
@@ -153,9 +145,7 @@
           </div>
 
           <div class="rating-row">
-            <span class="stars">
-              <svg v-for="n in 5" :key="n" viewBox="0 0 24 24" :fill="n <= Math.round(product.rating) ? '#f5a623' : 'none'" stroke="#f5a623" stroke-width="1.5"><path d="M12 2.5l2.9 6 6.6.7-4.9 4.6 1.3 6.6L12 17l-5.9 3.4 1.3-6.6L2.5 9.2l6.6-.7L12 2.5Z"/></svg>
-            </span>
+            <svg class="star-icon" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2.5l2.9 6 6.6.7-4.9 4.6 1.3 6.6L12 17l-5.9 3.4 1.3-6.6L2.5 9.2l6.6-.7L12 2.5Z"/></svg>
             <span class="rating-value">{{ product.rating.toFixed(1) }}</span>
             <span class="sold-count">· Terjual {{ product.sold }}</span>
           </div>
@@ -214,20 +204,17 @@ export default {
         {
           tag: 'Promo Kampus',
           title: 'Diskon Ongkir COD di Area Kampus',
-          desc: 'Belanja hemat, ambil langsung tanpa ongkir tambahan.',
-          bg: 'linear-gradient(135deg, #1e6f5c, #2f8f74)'
+          desc: 'Belanja hemat, ambil langsung tanpa ongkir tambahan.'
         },
         {
           tag: 'Titip Jual',
           title: 'Titip Barang Sebelum Pulang Kampung',
-          desc: 'Jangan bawa barang berat, titip jual saja lewat kami.',
-          bg: 'linear-gradient(135deg, #154c3d, #1e6f5c)'
+          desc: 'Jangan bawa barang berat, titip jual saja lewat kami.'
         },
         {
           tag: 'Bundling Hemat',
           title: 'Paket Perlengkapan Kos Lebih Murah',
-          desc: 'Beli satu paket, hemat sampai 20% dibanding beli satuan.',
-          bg: 'linear-gradient(135deg, #2f8f74, #57b894)'
+          desc: 'Beli satu paket, hemat sampai 20% dibanding beli satuan.'
         }
       ],
 
@@ -419,99 +406,99 @@ export default {
 <style scoped>
 .market-page {
   background: var(--bg-gradient);
-  padding: 24px var(--section-padding-x) var(--section-padding-y);
+  padding: 20px var(--section-padding-x) var(--section-padding-y);
 }
 
-/* ---------- BANNER ---------- */
-.promo-banner {
+/* ---------- HERO BANNER (satu warna, tenang) ---------- */
+.hero-banner {
   max-width: var(--container-max-width);
-  margin: 0 auto 28px;
+  margin: 0 auto 24px;
   position: relative;
   border-radius: var(--radius-card);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
-}
-
-.banner-track { display: flex; transition: transform 0.5s ease; }
-.banner-slide { min-width: 100%; padding: 44px 40px; color: white; }
-
-.banner-tag {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 5px 14px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.banner-slide h2 { font-size: 1.7rem; font-weight: var(--title-weight); margin-bottom: 8px; max-width: 480px; }
-.banner-slide p { font-size: var(--paragraph-size); opacity: 0.9; max-width: 440px; }
-
-.banner-dots { position: absolute; bottom: 14px; right: 20px; display: flex; gap: 6px; }
-.banner-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); cursor: pointer; }
-.banner-dot.active { background: white; width: 20px; border-radius: 4px; transition: var(--transition); }
-
-/* ---------- SEARCH & CATEGORY ---------- */
-.market-search { max-width: var(--container-max-width); margin: 0 auto 20px; display: flex; flex-direction: column; gap: 18px; }
-
-.search-bar {
-  display: flex; align-items: center; gap: 10px;
-  background: white; border: 1px solid var(--card-border);
-  border-radius: var(--radius-button); padding: 12px 18px;
+  background: var(--primary-color);
   box-shadow: var(--shadow-soft);
 }
 
-.search-bar svg { width: 20px; height: 20px; color: var(--text-muteds); flex-shrink: 0; }
-.search-bar input { border: none; outline: none; flex: 1; font-size: var(--paragraph-size); color: var(--text-mains); background: transparent; }
+.hero-track { display: flex; transition: transform 0.5s ease; }
+.hero-slide { min-width: 100%; padding: 32px 36px; color: white; }
 
-.category-icons { display: flex; gap: 22px; overflow-x: auto; padding-bottom: 4px; }
-
-.category-item {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  background: none; border: none; cursor: pointer; flex-shrink: 0;
-  color: var(--text-muteds); font-size: 0.72rem; font-weight: 600;
+.hero-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 10px;
 }
 
-.category-icon {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: white; border: 1px solid var(--card-border);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--icon-color); transition: var(--transition);
+.hero-slide h2 { font-size: 1.35rem; font-weight: var(--title-weight); margin-bottom: 6px; max-width: 480px; line-height: 1.3; }
+.hero-slide p { font-size: var(--caption-size); opacity: 0.85; max-width: 420px; }
+
+.hero-dots { position: absolute; bottom: 14px; right: 20px; display: flex; gap: 6px; }
+.hero-dot { width: 6px; height: 6px; padding: 0; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.4); cursor: pointer; }
+.hero-dot.active { background: white; width: 16px; border-radius: 4px; transition: var(--transition); }
+
+/* ---------- FILTER BAR ---------- */
+.filter-bar {
+  max-width: var(--container-max-width);
+  margin: 0 auto 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.category-icon :deep(svg) { width: 24px; height: 24px; }
-
-.category-item.active .category-icon { background: var(--primary-color); border-color: var(--primary-color); color: white; }
-.category-item.active { color: var(--text-mains); }
-
-/* ---------- TABS ---------- */
-.market-tabs { max-width: var(--container-max-width); margin: 0 auto 16px; display: flex; gap: 12px; flex-wrap: wrap; }
-
-.tab-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 18px; border-radius: var(--radius-button);
-  border: 1px solid var(--card-border); background: white;
-  color: var(--text-muteds); font-size: var(--caption-size);
-  font-weight: var(--caption-weight); cursor: pointer; transition: var(--transition);
+.search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius-button); padding: 11px 16px;
 }
 
-.tab-btn svg { width: 16px; height: 16px; }
-.tab-btn.active { background: var(--secondary-color); border-color: var(--secondary-color); color: var(--button-text-color); }
+.search-bar svg { width: 18px; height: 18px; color: var(--text-muteds); flex-shrink: 0; }
+.search-bar input { border: none; outline: none; flex: 1; font-size: var(--caption-size); color: var(--text-mains); background: transparent; }
 
-/* ---------- TOOLBAR ---------- */
-.market-toolbar {
-  max-width: var(--container-max-width); margin: 0 auto 18px;
+.chip-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 50px;
+  border: 1px solid var(--card-border); background: var(--card-bg);
+  color: var(--text-muteds); font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: var(--transition);
+}
+
+.chip-icon { display: inline-flex; width: 14px; height: 14px; }
+.chip-icon :deep(svg) { width: 14px; height: 14px; }
+
+.chip.active { background: var(--primary-color); border-color: var(--primary-color); color: white; }
+
+/* ---------- TABS + TOOLBAR ---------- */
+.control-row {
+  max-width: var(--container-max-width);
+  margin: 0 auto 18px;
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--card-border);
 }
 
-.result-count { font-size: var(--caption-size); color: var(--text-muteds); }
-.sort-select { display: flex; align-items: center; gap: 8px; font-size: var(--caption-size); color: var(--text-muteds); }
+.tab-group { display: flex; gap: 4px; }
+
+.tab-btn {
+  padding: 8px 4px; margin-right: 18px;
+  border: none; background: none; border-bottom: 2px solid transparent;
+  color: var(--text-muteds); font-size: var(--caption-size);
+  font-weight: 600; cursor: pointer; transition: var(--transition);
+}
+.tab-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+
+.toolbar-meta { display: flex; align-items: center; gap: 14px; }
+.result-count { font-size: 0.78rem; color: var(--text-muteds); }
 .sort-select select {
   border: 1px solid var(--card-border); border-radius: 8px;
-  padding: 6px 10px; font-size: var(--caption-size);
-  background: white; color: var(--text-mains);
+  padding: 6px 10px; font-size: 0.78rem;
+  background: var(--card-bg); color: var(--text-mains);
 }
 
 /* ---------- GRID ---------- */
@@ -524,11 +511,10 @@ export default {
 .product-card {
   background: var(--card-bg); border: 1px solid var(--card-border);
   border-radius: var(--radius-card); overflow: hidden;
-  box-shadow: var(--shadow-card); transition: var(--transition);
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column; transition: var(--transition);
 }
 
-.product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px rgba(30, 111, 92, 0.14); }
+.product-card:hover { box-shadow: var(--shadow-card); }
 
 /* ---------- IMAGE ---------- */
 .product-image-wrap { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #eef2f0; touch-action: pan-y; }
@@ -537,20 +523,19 @@ export default {
 
 .fav-btn {
   position: absolute; top: 10px; right: 10px;
-  width: 36px; height: 36px; border-radius: 50%;
+  width: 32px; height: 32px; border-radius: 50%;
   background: rgba(255, 255, 255, 0.9); border: none;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; color: var(--text-muteds); z-index: 2; transition: var(--transition);
 }
-.fav-btn svg { width: 18px; height: 18px; }
+.fav-btn svg { width: 16px; height: 16px; }
 .fav-btn.active { color: #e63950; }
-.fav-btn:hover { transform: scale(1.08); }
 
 .img-arrow {
   position: absolute; top: 50%; transform: translateY(-50%);
-  width: 30px; height: 30px; border-radius: 50%; border: none;
+  width: 28px; height: 28px; border-radius: 50%; border: none;
   background: rgba(255, 255, 255, 0.85); color: var(--text-mains);
-  font-size: 1.1rem; line-height: 1; cursor: pointer; z-index: 2;
+  font-size: 1.05rem; line-height: 1; cursor: pointer; z-index: 2;
   display: flex; align-items: center; justify-content: center;
   opacity: 0; transition: var(--transition);
 }
@@ -558,40 +543,36 @@ export default {
 .img-arrow.left { left: 8px; }
 .img-arrow.right { right: 8px; }
 
-.image-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.6); cursor: pointer; transition: var(--transition); }
-.dot.active { background: white; width: 16px; border-radius: 4px; }
+.image-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 2; }
+.dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255, 255, 255, 0.6); cursor: pointer; transition: var(--transition); }
+.dot.active { background: white; width: 14px; border-radius: 4px; }
 
 .badge {
-  position: absolute; left: 10px;
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 10px; border-radius: 50px;
-  font-size: 0.68rem; font-weight: 700; z-index: 2;
+  position: absolute; top: 10px; left: 10px;
+  padding: 4px 9px; border-radius: 6px;
+  font-size: 0.65rem; font-weight: 700; z-index: 2;
 }
-.badge svg { width: 11px; height: 11px; }
-.badge-discount { top: 10px; background: #e63950; color: white; }
-.badge-preorder { top: 42px; background: #fff4d6; color: #916800; }
-.badge-bundle { top: 42px; background: #ddeee7; color: var(--primary-color); }
-
-.badge-condition {
-  position: absolute; bottom: 10px; left: 10px;
-  background: rgba(0, 0, 0, 0.55); color: white;
-  font-size: 0.65rem; padding: 4px 9px; border-radius: 50px; z-index: 2;
-}
+.badge-discount { background: #e63950; color: white; }
+.badge-neutral { background: rgba(0, 0, 0, 0.55); color: white; }
+.badge-top { top: 10px; }
+.badge-discount + .badge-top { top: 38px; }
 
 /* ---------- INFO ---------- */
-.product-info { padding: 14px 16px 16px; display: flex; flex-direction: column; flex: 1; }
+.product-info { padding: 13px 15px 15px; display: flex; flex-direction: column; flex: 1; }
 
-.product-category { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muteds); opacity: 0.7; margin-bottom: 4px; }
-.product-title { font-size: var(--caption-size); font-weight: var(--subtitle-weight); color: var(--text-mains); margin-bottom: 6px; line-height: 1.3; min-height: 2.4em; }
+.product-category { font-size: 0.68rem; color: var(--text-muteds); opacity: 0.75; margin-bottom: 4px; }
+.product-title {
+  font-size: var(--caption-size); font-weight: var(--subtitle-weight); color: var(--text-mains);
+  margin-bottom: 6px; line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 
 .price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
-.product-price { font-size: 1.05rem; font-weight: 800; color: var(--primary-color); }
-.product-price-original { font-size: 0.75rem; color: var(--text-muteds); text-decoration: line-through; opacity: 0.7; }
+.product-price { font-size: 1rem; font-weight: 800; color: var(--primary-color); }
+.product-price-original { font-size: 0.72rem; color: var(--text-muteds); text-decoration: line-through; opacity: 0.7; }
 
 .rating-row { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
-.stars { display: flex; gap: 1px; }
-.stars svg { width: 12px; height: 12px; }
+.star-icon { width: 13px; height: 13px; }
 .rating-value { font-size: 0.72rem; color: var(--text-mains); font-weight: 600; }
 .sold-count { font-size: 0.72rem; color: var(--text-muteds); }
 
@@ -613,30 +594,31 @@ export default {
 .btn-chat {
   margin-top: 10px; width: 100%; padding: 9px;
   border-radius: var(--radius-button); border: 1px solid var(--primary-color);
-  background: white; color: var(--primary-color);
+  background: transparent; color: var(--primary-color);
   font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: var(--transition);
 }
 .btn-chat:hover { background: var(--primary-color); color: white; }
 
 /* ---------- EMPTY / LOAD MORE ---------- */
 .empty-state { max-width: var(--container-max-width); margin: 60px auto; text-align: center; color: var(--text-muteds); }
-.empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5; }
+.empty-state svg { width: 44px; height: 44px; margin-bottom: 12px; opacity: 0.4; }
 
-.load-more-wrap { text-align: center; margin-top: 32px; }
+.load-more-wrap { text-align: center; margin-top: 28px; }
 .btn-load-more {
-  padding: 12px 32px; border-radius: var(--radius-button);
-  border: 1px solid var(--primary-color); background: white;
-  color: var(--primary-color); font-weight: 700; font-size: var(--caption-size);
+  padding: 11px 30px; border-radius: var(--radius-button);
+  border: 1px solid var(--card-border); background: var(--card-bg);
+  color: var(--text-mains); font-weight: 600; font-size: 0.82rem;
   cursor: pointer; transition: var(--transition);
 }
-.btn-load-more:hover { background: var(--primary-color); color: white; }
+.btn-load-more:hover { border-color: var(--primary-color); color: var(--primary-color); }
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 640px) {
-  .banner-slide { padding: 30px 22px; }
-  .banner-slide h2 { font-size: 1.25rem; }
-  .market-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .hero-slide { padding: 24px 20px; }
+  .hero-slide h2 { font-size: 1.1rem; }
+  .control-row { flex-direction: column; align-items: flex-start; }
+  .market-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
   .product-title { font-size: 0.8rem; }
-  .product-price { font-size: 0.95rem; }
+  .product-price { font-size: 0.92rem; }
 }
 </style>

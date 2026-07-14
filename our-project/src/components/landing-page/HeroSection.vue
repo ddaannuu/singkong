@@ -12,7 +12,7 @@
       </p>
 
       <div class="cta-group">
-        <button class="btn-primary-landing" @click="goToMarket">
+        <button class="btn-primary-landing" @click="$router.push('/dashboard')">
           {{ content.hero.primaryBtnText }}
         </button>
 
