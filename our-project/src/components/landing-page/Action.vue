@@ -1,9 +1,9 @@
 <template>
   <section class="action-section">
     <div class="action-inner">
-      <div class="action-icon">
+      <!-- <div class="action-icon">
         <i class="fas fa-bullhorn"></i>
-      </div>
+      </div> -->
 
       <h3 class="action-title">{{ content.action.title }}</h3>
 

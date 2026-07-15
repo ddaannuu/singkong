@@ -6,7 +6,7 @@
 
     <div class="testimonial-wrapper">
       <button class="nav-btn left" @click="prevTestimonial">
-        <i class="fas fa-chevron-left"></i>
+        <i class="fas fa-circle-left"></i>
       </button>
 
       <div class="testimonial-container">
@@ -38,7 +38,7 @@
       </div>
 
       <button class="nav-btn right" @click="nextTestimonial">
-        <i class="fas fa-chevron-right"></i>
+        <i class="fas fa-circle-right"></i>
       </button>
     </div>
 
