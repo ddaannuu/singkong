@@ -1,7 +1,7 @@
 <template>
   <div class="adm-login-page">
     <div class="adm-login-box">
-      <div class="adm-login-logo"><i class="fas fa-recycle"></i></div>
+      <!-- <div class="adm-login-logo"><i class="fas fa-recycle"></i></div> -->
       <h1 class="adm-login-title">Admin Login</h1>
       <p class="adm-login-sub">Masuk untuk mengelola konten Second Chance Market.</p>
 
@@ -28,7 +28,7 @@
           />
         </div>
         <button type="submit" class="adm-btn adm-btn-primary adm-login-btn" :disabled="loggingIn">
-          <i class="fas" :class="loggingIn ? 'fa-spinner fa-spin' : 'fa-arrow-right-to-bracket'"></i>
+          <i class="fas" :class="loggingIn ? '' : ''"></i>
           {{ loggingIn ? 'Memproses...' : 'Masuk' }}
         </button>
       </form>
