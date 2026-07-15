@@ -13,7 +13,7 @@
         {{ item.label }}
       </a>
 
-      <a href="#" @click.prevent="goToMarket" class="btn-masuk">
+      <a href="#" @click="$router.push('/dashboard')" class="btn-masuk">
         {{ content.navbar.ctaText }}
       </a>
     </div>

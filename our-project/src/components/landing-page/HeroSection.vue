@@ -16,7 +16,7 @@
           {{ content.hero.primaryBtnText }}
         </button>
 
-        <button class="btn-outline-landing" @click="showDemo">
+        <button class="btn-outline-landing" @click="$router.push('/dashboard')">
           {{ content.hero.outlineBtnText }}
         </button>
       </div>
