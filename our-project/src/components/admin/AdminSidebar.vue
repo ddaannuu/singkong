@@ -4,13 +4,13 @@
 
   <aside class="adm-sidebar" :class="{ 'is-open': open }">
     <div class="adm-sidebar-brand">
-      <div class="adm-sidebar-logo"><i class="fas fa-recycle"></i></div>
+      <!-- <div class="adm-sidebar-logo"><i class="fas fa-recycle"></i></div> -->
       <div>
-        <div class="adm-sidebar-brand-name">Second Chance</div>
+        <div class="adm-sidebar-brand-name">Second Chance Market</div>
         <div class="adm-sidebar-brand-sub">Admin Panel</div>
       </div>
       <button type="button" class="adm-sidebar-close" @click="$emit('close')">
-        <i class="fas fa-xmark"></i>
+        <!-- <i class="fas fa-xmark"></i> -->
       </button>
     </div>
 
@@ -31,7 +31,7 @@
 
     <div class="adm-sidebar-footer">
       <button type="button" class="adm-sidebar-link adm-sidebar-logout" @click="$emit('logout')">
-        <i class="fas fa-arrow-right-from-bracket"></i>
+        <!-- <i class="fas fa-arrow-right-from-bracket"></i> -->
         <span>Keluar</span>
       </button>
     </div>
